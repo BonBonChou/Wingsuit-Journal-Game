@@ -76,6 +76,12 @@
       margin: 1em auto;
       width: 90%;
     } cursor: pointer;
+    .question-text {
+        font-size: 2em; /* 你可以依需求調整數值 */
+        font-weight: bold; /* 也可以設為 normal, lighter 等 */
+        margin-bottom: 0.5em;
+        color: #e3ce0e;
+    }
     .content { max-width: 600px; margin: auto; }
     .choice-btn { display: block; width: 100%; margin: 0.5em 0; padding: 1em; font-size: 1em; }
     #output { margin-top: 2em; padding: 1em; border: 1px solid #ccc; background: #f9f9f9; white-space: pre-line; }
@@ -103,7 +109,8 @@
 
   <!-- 問題頁面 -->
   <div id="game-screen" class="hidden">
-    <div id="question-box"></div>
+    <div id="question-text"></div>
+    <div id="question-options"></div>
   </div>
 
   <!-- 輸出頁面 -->
@@ -198,8 +205,10 @@
     }
 
     function renderQuestion() {
-      const qBox = document.getElementById("question-box");
-      qBox.innerHTML = "";
+      const qTextBox = document.getElementById("question-text");
+      const qOptBox = document.getElementById("question-options");
+      qTextBox.innerHTML = "";
+      qOptBox.innerHTML = "";
 
       const step = state.step;
       const question = questions[step];
@@ -208,12 +217,16 @@
         const randomWeather = weatherOptions[Math.floor(Math.random() * weatherOptions.length)];
         state.currentWeather = randomWeather;
 
-        const q = document.createElement("div");
-        q.innerHTML = `<h3>今天的天氣是：${randomWeather.label}</h3><p>你要在這種天氣下進行飛行嗎？</p>`;
-        qBox.appendChild(q);
+        const title = document.createElement("h3");
+        title.className = "question-text";
+        title.textContent = `今天的天氣是：${randomWeather.label}`;
+        const desc = document.createElement("p");
+        desc.textContent = "你要在這種天氣下進行飛行嗎？";
+        qTextBox.appendChild(title);
+        qTextBox.appendChild(desc);
 
         const yesBtn = document.createElement("button");
-        yesBtn.innerText = "是的，開始飛行！";
+        yesBtn.textContent = "是的，開始飛行！";
         yesBtn.className = "choice-btn";
         yesBtn.onclick = () => {
           state.answers[question.key] = randomWeather.key;
@@ -221,37 +234,48 @@
           state.step++;
           renderQuestion();
         };
-        qBox.appendChild(yesBtn);
+        qOptBox.appendChild(yesBtn);
 
         const noBtn = document.createElement("button");
-        noBtn.innerText = "擇日再戰，換個天氣吧";
+        noBtn.textContent = "擇日再戰，換個天氣吧";
         noBtn.className = "choice-btn";
         noBtn.onclick = () => renderQuestion();
-        qBox.appendChild(noBtn);
+        qOptBox.appendChild(noBtn);
         return;
       }
 
       const title = document.createElement("h3");
-      title.innerText = question.text;
-      qBox.appendChild(title);
+      title.className = "question-text";
+      title.textContent = question.text;
+      qTextBox.appendChild(title);
 
       Object.entries(question.options).forEach(([key, label]) => {
         const btn = document.createElement("button");
-        btn.innerText = label;
+        btn.textContent = label;
         btn.className = "choice-btn";
         btn.onclick = () => {
           state.answers[question.key] = key;
           renderKnowledgePage(question, key);
         };
-        qBox.appendChild(btn);
+        qOptBox.appendChild(btn);
       });
     }
 
+
     function renderKnowledgePage(question, selectedKey) {
-      const qBox = document.getElementById("question-box");
-      qBox.innerHTML = `<p>${question.knowledge[selectedKey]}</p>`;
+      const qTextBox = document.getElementById("question-text");
+      const qOptBox = document.getElementById("question-options");
+
+      qTextBox.innerHTML = "";
+      const knowText = document.createElement("p");
+      knowText.className = "question-text";  // 套用樣式
+      knowText.textContent = question.knowledge[selectedKey];
+      qTextBox.appendChild(knowText);
+
+      qOptBox.innerHTML = "";
       const btn = document.createElement("button");
-      btn.innerText = "繼續";
+      btn.textContent = "繼續";
+      btn.className = "choice-btn";
       btn.onclick = () => {
         state.step++;
         if (state.step >= questions.length) {
@@ -260,8 +284,9 @@
           renderQuestion();
         }
       };
-      qBox.appendChild(btn);
+      qOptBox.appendChild(btn);
     }
+
 
     function showOutput() {
       document.getElementById("game-screen").classList.add("hidden");
