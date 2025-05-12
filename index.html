@@ -2,22 +2,60 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>我的翼裝飛行訓練日誌</title>
   <style>
-    body { font-family: sans-serif; max-width: 800px; margin: 2em auto; line-height: 1.6; }
-    h1 { text-align: center; }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: linear-gradient(to right, #e8e7cf, #edebaf, #edebab);
+      color: #000000;
+      text-align: center;
+      padding: 2em;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: rgba(255,255,255,0.7);
+      border-radius: 15px;
+      padding: 2em;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+    h1 {
+      font-size: 35px;             /* 字體大小 */
+      color: #ffffff;              /* 白色字體比較適合做光暈效果 */
+      font-weight: bold;           /* 粗體 */
+      text-align: center;          /* 置中 */
+      margin-bottom: 30px;         /* 下方留空 */
+      text-shadow: 
+        0 0 5px #c2a200,           /* 淺紫光暈 */
+        0 0 10px #c2a200,
+        0 0 15px #c2a200,
+        0 0 20px #c2a200;
+      /*background-color: #000000;   /* 建議加深背景讓光暈更明顯 */
+      padding: 0px;
+      border-radius: 10px;
+    }
+    h3 {
+      font-size: 1.4em;
+      line-height: 1.6;
+
+      margin-bottom: 1em;
+      color: #c2a200;
+    }
     .hidden { display: none; }
     .center { text-align: center; }
     button { padding: 0.5em 1em; margin: 1em 0.5em; font-size: 1em; }
     .choice-btn { display: block; width: 100%; margin: 0.5em 0; padding: 1em; font-size: 1em; }
     #output { margin-top: 2em; padding: 1em; border: 1px solid #ccc; background: #f9f9f9; white-space: pre-line; }
   </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="container">
   <!-- 首頁 -->
   <div id="start-screen">
     <h1>我的翼裝飛行訓練日誌</h1>
-    <h3 class="center">踏上天空之路，書寫你的冒險篇章！</h3>
+    <h3 class="center">踏上天空之路，書寫冒險篇章！</h3>
     <p>這是一款以電影《翼裝飛行》為主題的文字互動遊戲。你將扮演主角羅貝塔，透過一連串的選擇體驗飛行訓練、挑戰極限，並最終完成你的訓練日誌。</p>
     <div class="center">
       <button onclick="nextStep()">開始創建我的日誌</button>
@@ -38,6 +76,7 @@
       <button onclick="downloadJournal()">下載日誌</button>
     </div>
   </div>
+</div>
 
   <script>
     const state = {
