@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>黑洞任務：宇宙真相追蹤</title>
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background: linear-gradient(to right, #211430, #210f36, #110221);
+      color: #fff;
+      text-align: center;
+      padding: 2em;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: rgba(0,0,0,0.7);
+      border-radius: 15px;
+      padding: 2em;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+    }
+    .hidden { display: none; }
+    button {
+      margin: 1em;
+      padding: 0.75em 2em;
+      font-size: 1.2em;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      background: #61248a;
+      color: white;
+      transition: background 0.3s ease;
+    }
+    button:hover { background: #d0b5ff; }
+    .choice-btn {
+      display: block;
+      margin: 1em auto;
+      width: 90%;
+    } cursor: pointer;
+    .content { max-width: 600px; margin: auto; }
+    h1 {
+      font-size: 30px;             /* 字體大小 */
+      color: #ffffff;              /* 白色字體比較適合做光暈效果 */
+      font-weight: bold;           /* 粗體 */
+      text-align: center;          /* 置中 */
+      margin-bottom: 30px;         /* 下方留空 */
+      text-shadow: 
+        0 0 5px #7300ff,           /* 淺紫光暈 */
+        0 0 10px #7300ff,
+        0 0 15px #7300ff,
+        0 0 20px #7300ff;
+      /*background-color: #000000;   /* 建議加深背景讓光暈更明顯 */
+      padding: 0px;
+      border-radius: 10px;
+    }
+    h4 {
+      font-size: 1.4em;
+      line-height: 1.6;
+
+      margin-bottom: 1em;
+      color: #9a42ff;
+    }
+    h5 {
+      font-size: 1.2em;
+      line-height: 1.2;
+      margin-top: 0em;
+      margin-bottom: 1em;
+      color: #d0b5ff;
+    }
+    .intro {
+      text-align: left;
+      margin-bottom: 0em;
+      background: rgba(255,255,255,0.05);
+      padding: 0.5em;
+      border-radius: 10px;
+    }
+    
+    #question-title {
+      font-size: *2em;  /* 你可以依需求調整數值 */
+      font-weight: bold; /* 也可以設為 normal, lighter 等 */
+      margin-bottom: 0.5em;
+      color: #9a42ff;
+    }
+    #question-text {
+      font-size: 1.5em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+    #feedback-title {
+      font-size: 2em;  /* 你可以依需求調整數值 */
+      font-weight: bold; /* 也可以設為 normal, lighter 等 */
+      margin-bottom: 0.5em;
+      color: #9a42ff;
+    }
+    #feedback-text {
+      font-size: 1.5em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+    }
+    #knowledge-title {
+      font-size: 2em;  /* 你可以依需求調整數值 */
+      font-weight: bold; /* 也可以設為 normal, lighter 等 */
+      margin-bottom: 0.5em;
+      color: #9a42ff;
+    }
+    #knowledge-text {
+      font-size: 1.5em;
+      line-height: 1.6;
+      margin-bottom: 1em;
+      text-align: justify;
+    }
+    #final-feedback {
+      font-size: 2em;
+      margin: 1em 0;
+      text-align: justify;
+      font-weight: bold;
+      background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rainbow 2s ease infinite;
+    }
+    .final-score {
+      margin-top: 1em;
+      font-size: 1.8em;
+      color: #9a42ff;;
+    }
+    .all-endings {
+      margin-top: 1.6em;
+      font-size: 1.2em;
+      color: #eee;
+      text-align: left;
+      padding: 1em;
+      background-color: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+    
+    .option-button {
+      display: block;
+      margin: 10px auto;
+      width: 80%;
+    }
+    .hidden {
+      display: none;
+    }
+    
+    @keyframes rainbow {
+      0% { background-position: 100% 50%; }
+      50% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+  <div id="start-screen">
+    <h1> 黑洞任務：宇宙真相追蹤</h1>
+    <h4>在無光之地，尋找宇宙的答案！</h4>
+    <div class="intro">
+      <h5>從牛頓到愛因斯坦，人類試圖理解宇宙的運作方式，而黑洞正是這場探索的關鍵節點。《黑洞》的內容化為這款小遊戲，邀請你一起走過理論與觀測的歷程，破解黑洞相關的宇宙謎團。</h5>
+      <h5>一同見證人類如何一步步逼近宇宙的真相！</h5>
+      <h3>🔍 遊戲說明</h3>
+      <p>🌌 <strong>背景故事</strong><br>你是宇宙調查局的特派調查員，任務是破解與黑洞相關的 8 大宇宙謎團。每一關都是通往真相的一步，準備好進入任務了嗎？</p>
+      <p>🧠 <strong>玩法簡介</strong><br>遊戲總共 8 關。每關只有一個正確答案，答對得分。</p>
+      <p>🏆 <strong>目標與結局</strong><br>遊戲結束後，將根據你的總分給予不同的評語與稱號。你能成功破解所有謎團，成為宇宙奧秘大師嗎？</p>
+    </div>
+    <button onclick="startGame()">開始遊戲</button>
+  </div>
+  <!-- 問題頁 -->
+  <div id="question-screen" class="hidden">
+    <h2 id="question-title"></h2>
+    <div class="intro">
+
+      <p style="text-align: justify;" id="question-text"></p>
+    </div>
+    <div id="options-container"></div>
+  </div>
+
+  <div class="hidden" id="feedback-screen">
+    <h3 id="feedback-title"></h3>
+    <p id="feedback-text"></p>
+    <button onclick="showKnowledge()">查看解析</button>
+  </div>
+
+  <div class="hidden" id="knowledge-screen">
+    <h3 id="knowledge-title">知識補充</h3>
+    <p id="knowledge-text"></p>
+    <button onclick="nextQuestion()">下一關</button>
+  </div>
+  <!-- 結算頁 -->
+  <div class="hidden" id="result-screen">
+    <h2>🌟 任務結束！</h2>
+    <p id="final-feedback"></p>
+    <div class="final-score" id="final-score"></div>   
+    <div class="all-endings">
+      <h3>所有評語對照表：</h3>
+      <ul>
+        <li>0–1 分：每次嘗試都更靠近真相，歡迎再次挑戰！</li>
+        <li>2–3 分：好開始是成功的一半，繼續追尋宇宙的奧祕吧！</li>
+        <li>4–5 分：宇宙新探員，你的觀察力正在穩定成長中！</li>
+        <li>6–7 分：太空偵查高手！再一點點就能破解全部謎團！</li>
+        <li>8 分：宇宙奧秘大師！你已掌握宇宙的關鍵祕密！</li>
+      </ul>
+    </div>
+    <button onclick="location.reload()">重新開始</button>
+  </div>
+</div>
+  <script>
+    const questions = [
+      {
+        title: "第 1 關：重力的第一步",
+        intro: `
+          <h3>🔎 任務簡報</h3>
+          <p>一艘太空探測器靠近一顆陌生行星時出現了奇怪的現象，我們從太空站收到這些紀錄，請幫忙判斷是什麼重力理論最適合解釋它。</p>
+          <h3>📁 調查資料</h3>
+          <p>「探測器一開始直直飛，但靠近行星時，它開始被吸引並繞著行星旋轉，就像月亮繞地球那樣。我們的時鐘顯示沒什麼變化。」</p>
+        `,
+        question: "你覺得最適合解釋這個現象的是哪一種重力理論？",
+        options: [
+          "牛頓的萬有引力：有質量的東西會彼此吸引",
+          "狹義相對論：描述高速移動時時間會變慢",
+          "廣義相對論：重力會讓時空彎曲",
+          "黑洞理論：描述黑洞和它發出的能量"
+        ],
+        answerIndex: 0,
+        feedback: "牛頓認為重力是物體間的吸引力，而愛因斯坦則認為重力是物體使時空彎曲後的結果，兩者理論基礎不同但都很重要。",
+        knowledge: "牛頓在17世紀提出萬有引力定律，成功解釋了行星運動；但到了20世紀，愛因斯坦的廣義相對論指出重力並不是一種真正的「力」，而是質量使周圍的時空彎曲，物體在彎曲的時空中運動才呈現出被『吸引』的效果。這為我們理解緻密天體如黑洞奠定基礎。"
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function startGame() {
+      document.getElementById("start-screen").classList.add("hidden");
+      showQuestion();
+    }
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("question-screen").classList.remove("hidden");
+      document.getElementById("question-title").textContent = q.title;
+
+      document.getElementById("question-text").textContent = q.question;
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+      q.options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.className = "option-button";
+        btn.onclick = () => checkAnswer(index);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(selectedIndex) {
+      document.getElementById("question-screen").classList.add("hidden");
+      const q = questions[currentQuestion];
+      document.getElementById("feedback-screen").classList.remove("hidden");
+      if (selectedIndex === q.answerIndex) {
+        document.getElementById("feedback-title").textContent = "答對了！";
+        score++;
+      } else {
+        document.getElementById("feedback-title").textContent = "答錯了";
+      }
+      document.getElementById("feedback-text").textContent = q.feedback;
+    }
+
+    function showKnowledge() {
+      document.getElementById("feedback-screen").classList.add("hidden");
+      document.getElementById("knowledge-screen").classList.remove("hidden");
+      document.getElementById("knowledge-text").textContent = questions[currentQuestion].knowledge;
+    }
+
+    function nextQuestion() {
+      document.getElementById("knowledge-screen").classList.add("hidden");
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById("result-screen").classList.remove("hidden");
+      document.getElementById("final-score").textContent = `你的總分：${score}/8`;
+      let feedback = "";
+      if (score === 8) feedback = "宇宙奧秘大師！你已掌握宇宙的關鍵祕密！";
+      else if (score >= 6) feedback = "太空偵查高手！再一點點就能破解全部謎團！";
+      else if (score >= 4) feedback = "宇宙新探員，你的觀察力正在穩定成長中！";
+      else if (score >= 2) feedback = "好開始是成功的一半，繼續追尋宇宙的奧祕吧！";
+      else feedback = "每次嘗試都更靠近真相，歡迎再次挑戰！";
+      document.getElementById("final-feedback").textContent = feedback;
+    }
+
+    function restartGame() {
+      score = 0;
+      currentQuestion = 0;
+      document.getElementById("result-screen").classList.add("hidden");
+      startGame();
+    }
+  </script>
+</body>
+</html>
