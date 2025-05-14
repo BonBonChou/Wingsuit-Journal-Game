@@ -1,354 +1,447 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的翼裝飛行訓練日誌</title>
-  <style>
-    body {
-      font-family: 'Noto Sans TC', sans-serif;
-      background: linear-gradient(to right, #e8e7cf, #edebaf, #edebab);
-      color: #000000;
-      text-align: center;
-      padding: 2em;
-    }
-    .container {
-      max-width: 700px;
-      margin: auto;
-      background: rgba(255,255,255,0.7);
-      border-radius: 15px;
-      padding: 2em;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-    }
-    h1 {
-      font-size: 35px;             /* 字體大小 */
-      color: #ffffff;              /* 白色字體比較適合做光暈效果 */
-      font-weight: bold;           /* 粗體 */
-      text-align: center;          /* 置中 */
-      margin-bottom: 30px;         /* 下方留空 */
-      text-shadow: 
-        0 0 5px #c2a200,           /* 淺紫光暈 */
-        0 0 10px #c2a200,
-        0 0 15px #c2a200,
-        0 0 20px #c2a200;
-      /*background-color: #000000;   /* 建議加深背景讓光暈更明顯 */
-      padding: 0px;
-      border-radius: 10px;
-    }
-    h4 {
-      font-size: 1.4em;
-      line-height: 1.6;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的翼裝飛行訓練日誌</title>
+    <style>
+      body {
+        font-family: "Noto Sans TC", sans-serif;
+        background: linear-gradient(to right, #e8e7cf, #edebaf, #edebab);
+        color: #000000;
+        text-align: center;
+        padding: 2em;
+      }
+      .container {
+        max-width: 700px;
+        margin: auto;
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 15px;
+        padding: 2em;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 35px; /* 字體大小 */
+        color: #ffffff; /* 白色字體比較適合做光暈效果 */
+        font-weight: bold; /* 粗體 */
+        text-align: center; /* 置中 */
+        margin-bottom: 30px; /* 下方留空 */
+        text-shadow:
+          0 0 5px #c2a200,
+          /* 淺紫光暈 */ 0 0 10px #c2a200,
+          0 0 15px #c2a200,
+          0 0 20px #c2a200;
+        /*background-color: #000000;   /* 建議加深背景讓光暈更明顯 */
+        padding: 0px;
+        border-radius: 10px;
+      }
+      h4 {
+        font-size: 1.4em;
+        line-height: 1.6;
 
-      margin-bottom: 1em;
-      color: #e3ce0e;
-    }
-    h5 {
-      font-size: 1.2em;
-      line-height: 1.2;
-      margin-top: 0em;
-      margin-bottom: 1em;
-      color: #b3a102;
-    }
-    .intro {
-      text-align: left;
-      margin-bottom: 0em;
-      
-      background: rgba(0,0,0,0.05);
-      padding: 0.5em;
-      border-radius: 10px;
-    }
-    .hidden { display: none; }
-    .center { text-align: center; }
-    button {
-      margin: 1em;
-      padding: 0.75em 2em;
-      font-size: 1.2em;
-      border-radius: 12px;
-      border: none;
+        margin-bottom: 1em;
+        color: #e3ce0e;
+      }
+      h5 {
+        font-size: 1.2em;
+        line-height: 1.2;
+        margin-top: 0em;
+        margin-bottom: 1em;
+        color: #b3a102;
+      }
+      .intro {
+        text-align: left;
+        margin-bottom: 0em;
+
+        background: rgba(0, 0, 0, 0.05);
+        padding: 0.5em;
+        border-radius: 10px;
+      }
+      .hidden {
+        display: none;
+      }
+      .center {
+        text-align: center;
+      }
+      button {
+        margin: 1em;
+        padding: 0.75em 2em;
+        font-size: 1.2em;
+        border-radius: 12px;
+        border: none;
+        cursor: pointer;
+        background: #fcd303;
+        color: black;
+        transition: background 0.3s ease;
+      }
+      button:hover {
+        background: #e6cc0a;
+      }
+      .choice-btn {
+        display: block;
+        margin: 1em auto;
+        width: 90%;
+      }
       cursor: pointer;
-      background: #fcd303;
-      color: black;
-      transition: background 0.3s ease;
-    }
-    button:hover { background: #e6cc0a; }
-    .choice-btn {
-      display: block;
-      margin: 1em auto;
-      width: 90%;
-    } cursor: pointer;
-    .question-text {
+      #question-title {
         font-size: 2em; /* 你可以依需求調整數值 */
         font-weight: bold; /* 也可以設為 normal, lighter 等 */
         margin-bottom: 0.5em;
         color: #e3ce0e;
-    }
-    .content { max-width: 600px; margin: auto; }
-    .choice-btn { display: block; width: 100%; margin: 0.5em 0; padding: 1em; font-size: 1em; }
-    #output { margin-top: 2em; padding: 1em; border: 1px solid #ccc; background: #f9f9f9; white-space: pre-line; }
-  </style>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
-</head>
-<body>
-<div class="container">
-  <!-- 首頁 -->
-  <div id="start-screen">
-    <h1>我的翼裝飛行訓練日誌</h1>
-    <h4 class="center">踏上天空之路，書寫冒險篇章！</h4>
-    <div class="intro">
-      <h5>立體劇場電影《翼裝飛行》的內容化為這款小遊戲，。</h5>
-      <h5>一同見證人類如何一步步接近宇宙的真相！</h5>
-      <h3>🔍 遊戲說明</h3>
-      <p>🌌 <strong>背景故事</strong><br>你將扮演一名翼裝飛行員，透過一連串的選擇體驗飛行訓練、挑戰極限，並最終完成你的訓練日誌。</p>
-      <p>🧠 <strong>玩法簡介</strong><br>遊戲總共 10 種情境。每種情境只能選擇一個答案。</p>
-      <p>🏆 <strong>目標與結局</strong><br>遊戲結束後，將根據你的選擇獲得不同的翼裝飛行訓練日誌。</p>
-    </div>
-    <div class="center">
-      <button onclick="nextStep()">開始創建我的日誌</button>
-    </div>
-  </div>
-
-  <!-- 問題頁面 -->
-  <div id="game-screen" class="hidden">
-    <div id="question-text"></div>
-    <div id="question-options"></div>
-  </div>
-
-  <!-- 輸出頁面 -->
-  <div id="output-screen" class="hidden">
-    <h2>你的訓練日誌</h2>
-    <div id="output"></div>
-    <div class="center">
-      <button onclick="restartGame()">重新開始</button>
-      <button onclick="downloadJournal()">下載日誌</button>
-    </div>
-  </div>
-</div>
-
-  <script>
-    const state = {
-      step: 0,
-      answers: {},
-      fatal: false,
-      journalParts: [],
-    };
-
-    const locations = {
-      A: "瑞士：愛格爾峰",
-      B: "美國：摩押沙漠",
-      C: "澳洲：希爾灣"
-    };
-
-    const weatherOptions = [
-      { key: "A", label: "晴朗" },
-      { key: "B", label: "氣壓變化大" },
-      { key: "C", label: "能見度低，有強風" },
-      { key: "D", label: "能見度零" }
-    ];
-
-    const questions = [
-      {
-        key: "location",
-        text: "選擇你的訓練地點：",
-        options: {
-          A: locations.A,
-          B: locations.B,
-          C: locations.C
-        },
-        knowledge: {
-          A: "愛格爾峰氣候變化快速，是死亡率極高的飛行場域。",
-          B: "摩押沙漠雖地勢較低，但高溫與岩壁飛行極具挑戰。",
-          C: "希爾灣高原氣候乾燥，適合進行高空跳傘與速度控制訓練。"
-        }
-      },
-      {
-        key: "weather",
-        isWeather: true
-      },
-      {
-        key: "training",
-        text: "今天你要專注的訓練目標是？",
-        options: {
-          A: "提升升力",
-          B: "編隊飛行",
-          C: "高空加速與減速"
-        },
-        knowledge: {
-          A: "調整飛行姿勢與傾斜角度可以最大化升力，提升滑翔距離。",
-          B: "編隊飛行需要緊密合作，並避免進入夥伴產生的湍流區域。",
-          C: "高空跳傘時速度會急遽上升，學習控制姿勢可掌握加速度與終端速度。"
-        }
-      },
-      {
-        key: "gear",
-        text: "你選擇的飛鼠裝裝備是？",
-        options: {
-          A: "傳統尼龍飛鼠裝",
-          B: "新型氣室裝",
-          C: "碳纖維強化裝"
-        },
-        knowledge: {
-          A: "早期飛鼠裝較為簡單，對飛行者的姿勢控制要求更高。",
-          B: "氣室裝備能迅速充氣穩定滑翔，是目前常見的翼裝類型。",
-          C: "碳纖維強化材質提供更高剛性與抗風能力，提升飛行穩定性。"
-        }
       }
-    ];
+      #question-text {
+        font-size: 1.5em;
+        line-height: 1.6;
+        margin-bottom: 1em;
+      }
+      #knowledge-title {
+        font-size: 2em; /* 你可以依需求調整數值 */
+        font-weight: bold; /* 也可以設為 normal, lighter 等 */
+        margin-bottom: 0.5em;
+        color: #9a42ff;
+      }
+      #knowledge-text {
+        font-size: 1.5em;
+        line-height: 1.6;
+        margin-bottom: 1em;
+        text-align: justify;
+      }
+      .option-button {
+        display: block;
+        margin: 10px auto;
+        width: 80%;
+      }
+      .content {
+        max-width: 600px;
+        margin: auto;
+      }
+      .choice-btn {
+        display: block;
+        width: 100%;
+        margin: 0.5em 0;
+        padding: 1em;
+        font-size: 1em;
+      }
+      #output {
+        margin-top: 2em;
+        padding: 1em;
+        border: 1px solid #ccc;
+        background: #f9f9f9;
+        white-space: pre-line;
+      }
+    </style>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <!-- 首頁 -->
+      <div id="start-screen">
+        <h1>我的翼裝飛行訓練日誌</h1>
+        <h4 class="center">踏上天空之路，書寫冒險篇章！</h4>
+        <div class="intro">
+          <h5>立體劇場電影《翼裝飛行》的內容化為這款小遊戲，。</h5>
+          <h5>一同見證人類如何一步步接近宇宙的真相！</h5>
+          <h3>🔍 遊戲說明</h3>
+          <p>
+            🌌 <strong>背景故事</strong
+            ><br />你將扮演一名翼裝飛行員，透過一連串的選擇體驗飛行訓練、挑戰極限，並最終完成你的訓練日誌。
+          </p>
+          <p>
+            🧠 <strong>玩法簡介</strong><br />遊戲總共 10
+            種情境。每種情境只能選擇一個答案。
+          </p>
+          <p>
+            🏆 <strong>目標與結局</strong
+            ><br />遊戲結束後，將根據你的選擇獲得不同的翼裝飛行訓練日誌。
+          </p>
+        </div>
+        <button onclick="nextStep()">開始創建我的日誌</button>
+      </div>
 
-    function nextStep() {
-      document.getElementById("start-screen").classList.add("hidden");
-      document.getElementById("game-screen").classList.remove("hidden");
-      state.step = 0;
-      state.answers = {};
-      state.fatal = false;
-      state.journalParts = [];
-      renderQuestion();
-    }
+      <!-- 問題頁面 -->
+      <div id="question-screen" class="hidden">
+        <h2 id="question-title"></h2>
+        <p style="text-align: justify" id="question-text"></p>
+        <div id="options-container"></div>
+      </div>
+      <!-- 知識頁 -->
+      <div class="hidden" id="knowledge-screen">
+        <h3 id="knowledge-title">知識補充</h3>
+        <p id="knowledge-text"></p>
+        <div id="info-link" class="hidden" style="margin-top: 1em"></div>
+        <button onclick="nextQuestion()">繼續</button>
+      </div>
 
-    function renderQuestion() {
-      const qTextBox = document.getElementById("question-text");
-      const qOptBox = document.getElementById("question-options");
-      qTextBox.innerHTML = "";
-      qOptBox.innerHTML = "";
+      <!-- 輸出頁面 -->
+      <div id="output-screen" class="hidden">
+        <h2>🌟 你的訓練日誌</h2>
+        <div id="output"></div>
+        <button onclick="location.reload()">重新開始</button>
+        <button onclick="downloadJournal()">下載日誌</button>
+      </div>
+    </div>
 
-      const step = state.step;
-      const question = questions[step];
-
-      if (question.isWeather) {
-        const randomWeather = weatherOptions[Math.floor(Math.random() * weatherOptions.length)];
-        state.currentWeather = randomWeather;
-
-        const title = document.createElement("h3");
-        title.className = "question-text";
-        title.textContent = `今天的天氣是：${randomWeather.label}`;
-        const desc = document.createElement("p");
-        desc.textContent = "你要在這種天氣下進行飛行嗎？";
-        qTextBox.appendChild(title);
-        qTextBox.appendChild(desc);
-
-        const yesBtn = document.createElement("button");
-        yesBtn.textContent = "是的，開始飛行！";
-        yesBtn.className = "choice-btn";
-        yesBtn.onclick = () => {
-          state.answers[question.key] = randomWeather.key;
-          if (randomWeather.key === "D") state.fatal = true;
-          state.step++;
-          renderQuestion();
-        };
-        qOptBox.appendChild(yesBtn);
-
-        const noBtn = document.createElement("button");
-        noBtn.textContent = "擇日再戰，換個天氣吧";
-        noBtn.className = "choice-btn";
-        noBtn.onclick = () => renderQuestion();
-        qOptBox.appendChild(noBtn);
-        return;
+    <script>
+      const state = {
+        step: 0,
+        answers: {},
+        fatal: false,
+        journalParts: [],
       }
 
-      const title = document.createElement("h3");
-      title.className = "question-text";
-      title.textContent = question.text;
-      qTextBox.appendChild(title);
+      const locations = {
+        A: "瑞士：愛格爾峰",
+        B: "美國：摩押沙漠",
+        C: "澳洲：希爾灣",
+      }
 
-      Object.entries(question.options).forEach(([key, label]) => {
-        const btn = document.createElement("button");
-        btn.textContent = label;
-        btn.className = "choice-btn";
-        btn.onclick = () => {
-          state.answers[question.key] = key;
-          renderKnowledgePage(question, key);
-        };
-        qOptBox.appendChild(btn);
-      });
-    }
+      const weatherOptions = [
+        { key: "A", label: "晴朗" },
+        { key: "B", label: "氣壓變化大" },
+        { key: "C", label: "能見度低，有強風" },
+        { key: "D", label: "能見度零" },
+      ]
 
+      const questions = [
+        {
+          key: "location",
+          text: "選擇你的訓練地點：",
+          options: {
+            A: locations.A,
+            B: locations.B,
+            C: locations.C,
+          },
+          knowledge: {
+            A: "愛格爾峰氣候變化快速，是死亡率極高的飛行場域。",
+            B: "摩押沙漠雖地勢較低，但高溫與岩壁飛行極具挑戰。",
+            C: "希爾灣高原氣候乾燥，適合進行高空跳傘與速度控制訓練。",
+          },
+        },
+        {
+          key: "weather",
+          question: "你要在這種天氣下進行飛行嗎？",
+          isWeather: true,
+        },
+        {
+          key: "training",
+          text: "今天你要專注的訓練目標是？",
+          options: {
+            A: "提升升力",
+            B: "編隊飛行",
+            C: "高空加速與減速",
+          },
+          knowledge: {
+            A: "調整飛行姿勢與傾斜角度可以最大化升力，提升滑翔距離。",
+            B: "編隊飛行需要緊密合作，並避免進入夥伴產生的湍流區域。",
+            C: "高空跳傘時速度會急遽上升，學習控制姿勢可掌握加速度與終端速度。",
+          },
+        },
+        {
+          key: "gear",
+          text: "你選擇的飛鼠裝裝備是？",
+          options: {
+            A: "傳統尼龍飛鼠裝",
+            B: "新型氣室裝",
+            C: "碳纖維強化裝",
+          },
+          knowledge: {
+            A: "早期飛鼠裝較為簡單，對飛行者的姿勢控制要求更高。",
+            B: "氣室裝備能迅速充氣穩定滑翔，是目前常見的翼裝類型。",
+            C: "碳纖維強化材質提供更高剛性與抗風能力，提升飛行穩定性。",
+          },
+        },
+      ]
 
-    function renderKnowledgePage(question, selectedKey) {
-      const qTextBox = document.getElementById("question-text");
-      const qOptBox = document.getElementById("question-options");
+      function formatknowledge(knowledge) {
+        return knowledge
+          .replace(/\n/g, "<br>") // 若你 intro 裡是用換行符號斷行，也可以加這行
+          .replace(/\s{2,}/g, "") // 清除多餘空白
+      }
 
-      qTextBox.innerHTML = "";
-      const knowText = document.createElement("p");
-      knowText.className = "question-text";  // 套用樣式
-      knowText.textContent = question.knowledge[selectedKey];
-      qTextBox.appendChild(knowText);
+      function startGame() {
+        document.getElementById("start-screen").classList.add("hidden")
+        state.step = 0
+        state.answers = {}
+        state.fatal = false
+        state.journalParts = []
+        showQuestion()
+      }
 
-      qOptBox.innerHTML = "";
-      const btn = document.createElement("button");
-      btn.textContent = "繼續";
-      btn.className = "choice-btn";
-      btn.onclick = () => {
-        state.step++;
-        if (state.step >= questions.length) {
-          showOutput();
+      function showQuestion() {
+        const step = state.step
+        const q = questions[step]
+        document.getElementById("question-screen").classList.remove("hidden")
+        document.getElementById("question-title").textContent = q.text
+        document.getElementById("question-text").textContent = q.question
+        if (q.isWeather) {
+          const randomWeather =
+            weatherOptions[Math.floor(Math.random() * weatherOptions.length)]
+          state.currentWeather = randomWeather
+
+          const title = document.createElement("h3")
+          title.className = "question-text"
+          title.textContent = `今天的天氣是：${randomWeather.label}`
+          qTextBox.appendChild(title)
+
+          const yesBtn = document.createElement("button")
+          yesBtn.textContent = "是的，開始飛行！"
+          yesBtn.className = "choice-btn"
+          yesBtn.onclick = () => {
+            state.answers[question.key] = randomWeather.key
+            if (randomWeather.key === "D") state.fatal = true
+            state.step++
+            renderQuestion()
+          }
+          qOptBox.appendChild(yesBtn)
+
+          const noBtn = document.createElement("button")
+          noBtn.textContent = "擇日再戰，換個天氣吧"
+          noBtn.className = "choice-btn"
+          noBtn.onclick = () => renderQuestion()
+          qOptBox.appendChild(noBtn)
+          return
+        }
+
+        const optionsContainer = document.getElementById("options-container")
+        optionsContainer.innerHTML = ""
+        q.options.forEach((opt, index) => {
+          const btn = document.createElement("button")
+          btn.textContent = opt
+          btn.className = "option-button"
+          //btn.onclick = () => checkAnswer(index);
+
+          optionsContainer.appendChild(btn)
+        })
+      }
+
+      function showKnowledge() {
+        const step = state.step
+        document.getElementById("question-screen").classList.add("hidden")
+        document.getElementById("knowledge-screen").classList.remove("hidden")
+        document.getElementById("knowledge-text").innerHTML = formatknowledge(
+          questions[step].knowledge,
+        )
+        const info = questions[step]
+        const link = info && info.link
+        const linkArea = document.getElementById("info-link")
+        if (link) {
+          linkArea.innerHTML = "<p>相關內容</p>"
+
+          // 情況 1：多個網址
+          if (Array.isArray(link)) {
+            link.forEach((l) => {
+              linkArea.innerHTML += `<a href="${l.url}" target="_blank" style="display:block; color:#00ccff;">${l.text}</a>`
+            })
+          }
+          // 情況 2：單一網址
+          else if (link.url && link.text) {
+            linkArea.innerHTML += `<a href="${link.url}" target="_blank" style="display:block; color:#00ccff;">${link.text}</a>`
+          }
+
+          linkArea.classList.remove("hidden")
         } else {
-          renderQuestion();
-        }
-      };
-      qOptBox.appendChild(btn);
-    }
-
-
-    function showOutput() {
-      document.getElementById("game-screen").classList.add("hidden");
-      document.getElementById("output-screen").classList.remove("hidden");
-
-      const outputEl = document.getElementById("output");
-      outputEl.innerText = "";
-      const lines = [];
-
-      lines.push("今天是個重要的日子，我開始了翼裝飛行的訓練之旅。");
-
-      if (state.answers.location === "A") lines.push("我來到壯麗的愛格爾峰，這裡是無數冒險者夢想的挑戰地點。氣候變化迅速，每一步都得萬分小心。");
-      if (state.answers.location === "B") lines.push("我選擇在炙熱的摩押沙漠訓練，這裡的岩壁與高溫構成極具挑戰的飛行環境。");
-      if (state.answers.location === "C") lines.push("我來到澳洲希爾灣的高原，這裡氣候乾燥、視野開闊，是進行高空飛行的絕佳場所。");
-
-      if (state.answers.weather === "D") {
-        lines.push("不幸的是，我在能見度為零的情況下起飛，最終迷失在茫茫的大雪與風暴之中……這次任務，以沉默告終。");
-      } else {
-        const weatherLabel = {
-          A: "天氣晴朗，氣流穩定，讓我更專注於技術的提升。",
-          B: "氣壓變化頻繁，我必須時刻調整姿態來應對風勢。",
-          C: "強風與低能見度增添訓練難度，也磨練了我的應變能力。"
-        };
-        lines.push(weatherLabel[state.answers.weather]);
-
-        if (state.answers.training === "A") lines.push("我專注於提升升力的訓練，透過角度與姿勢的調整來增加滑翔距離。");
-        if (state.answers.training === "B") lines.push("我進行了編隊飛行訓練，與夥伴保持良好距離，避免湍流干擾。");
-        if (state.answers.training === "C") lines.push("我模擬了高空加速與減速的場景，學習控制姿態與速度變化。");
-
-        if (state.answers.gear === "A") lines.push("我使用的是傳統尼龍飛鼠裝，儘管簡單，卻能幫助我強化基本飛行技巧。");
-        if (state.answers.gear === "B") lines.push("我穿上新型氣室裝備，能快速充氣穩定滑翔，是提升效率的重要工具。");
-        if (state.answers.gear === "C") lines.push("我配備碳纖維強化飛鼠裝，提供卓越的穩定性，讓我更有信心完成訓練。");
-
-        lines.push("訓練雖然艱難，但我從中學到了寶貴的飛行知識與經驗。這一切都將成為我通往高空夢想的基石。");
-      }
-
-      let index = 0;
-      function typeLine() {
-        if (index < lines.length) {
-          outputEl.innerText += lines[index] + "\n";
-          index++;
-          setTimeout(typeLine, 1000);
+          linkArea.innerHTML = ""
+          linkArea.classList.add("hidden")
         }
       }
-      typeLine();
-    }
 
-    function restartGame() {
-      document.getElementById("output-screen").classList.add("hidden");
-      document.getElementById("start-screen").classList.remove("hidden");
-    }
+      function nextQuestion() {
+        document.getElementById("knowledge-screen").classList.add("hidden")
+        state.step++
+        if (state.step < questions.length) {
+          showQuestion()
+        } else {
+          showOutput()
+        }
+      }
 
-    function downloadJournal() {
-      const text = document.getElementById("output").innerText;
-      const blob = new Blob([text], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "翼裝飛行訓練日誌.txt";
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  </script>
-</body>
+      function showOutput() {
+        document.getElementById("output-screen").classList.remove("hidden")
+
+        const outputEl = document.getElementById("output")
+        outputEl.innerText = ""
+        const lines = []
+
+        lines.push("今天是個重要的日子，我開始了翼裝飛行的訓練之旅。")
+
+        if (state.answers.location === "A")
+          lines.push(
+            "我來到壯麗的愛格爾峰，這裡是無數冒險者夢想的挑戰地點。氣候變化迅速，每一步都得萬分小心。",
+          )
+        if (state.answers.location === "B")
+          lines.push(
+            "我選擇在炙熱的摩押沙漠訓練，這裡的岩壁與高溫構成極具挑戰的飛行環境。",
+          )
+        if (state.answers.location === "C")
+          lines.push(
+            "我來到澳洲希爾灣的高原，這裡氣候乾燥、視野開闊，是進行高空飛行的絕佳場所。",
+          )
+
+        if (state.answers.weather === "D") {
+          lines.push(
+            "不幸的是，我在能見度為零的情況下起飛，最終迷失在茫茫的大雪與風暴之中……這次任務，以沉默告終。",
+          )
+        } else {
+          const weatherLabel = {
+            A: "天氣晴朗，氣流穩定，讓我更專注於技術的提升。",
+            B: "氣壓變化頻繁，我必須時刻調整姿態來應對風勢。",
+            C: "強風與低能見度增添訓練難度，也磨練了我的應變能力。",
+          }
+          lines.push(weatherLabel[state.answers.weather])
+
+          if (state.answers.training === "A")
+            lines.push(
+              "我專注於提升升力的訓練，透過角度與姿勢的調整來增加滑翔距離。",
+            )
+          if (state.answers.training === "B")
+            lines.push(
+              "我進行了編隊飛行訓練，與夥伴保持良好距離，避免湍流干擾。",
+            )
+          if (state.answers.training === "C")
+            lines.push("我模擬了高空加速與減速的場景，學習控制姿態與速度變化。")
+
+          if (state.answers.gear === "A")
+            lines.push(
+              "我使用的是傳統尼龍飛鼠裝，儘管簡單，卻能幫助我強化基本飛行技巧。",
+            )
+          if (state.answers.gear === "B")
+            lines.push(
+              "我穿上新型氣室裝備，能快速充氣穩定滑翔，是提升效率的重要工具。",
+            )
+          if (state.answers.gear === "C")
+            lines.push(
+              "我配備碳纖維強化飛鼠裝，提供卓越的穩定性，讓我更有信心完成訓練。",
+            )
+
+          lines.push(
+            "訓練雖然艱難，但我從中學到了寶貴的飛行知識與經驗。這一切都將成為我通往高空夢想的基石。",
+          )
+        }
+        // 打字機效果
+        let index = 0
+        function typeLine() {
+          if (index < lines.length) {
+            outputEl.innerText += lines[index] + "\n"
+            index++
+            setTimeout(typeLine, 1000)
+          }
+        }
+        typeLine()
+      }
+
+      function downloadJournal() {
+        const text = document.getElementById("output").innerText
+        const blob = new Blob([text], { type: "text/plain" })
+        const url = URL.createObjectURL(blob)
+        const a = document.createElement("a")
+        a.href = url
+        a.download = "翼裝飛行訓練日誌.txt"
+        a.click()
+        URL.revokeObjectURL(url)
+      }
+    </script>
+  </body>
 </html>
