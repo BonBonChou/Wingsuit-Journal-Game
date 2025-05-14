@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>我的翼裝飛行訓練日誌</title>
+    <title>翼裝飛行訓練日誌</title>
     <style>
       body {
         font-family: "Noto Sans TC", sans-serif;
@@ -74,15 +74,12 @@
         color: black;
         transition: background 0.3s ease;
       }
-      button:hover {
-        background: #e6cc0a;
-      }
+      button:hover { background: #e6cc0a; }
       .choice-btn {
         display: block;
         margin: 1em auto;
         width: 90%;
-      }
-      cursor: pointer;
+      } cursor: pointer;
       #question-title {
         font-size: 2em; /* 你可以依需求調整數值 */
         font-weight: bold; /* 也可以設為 normal, lighter 等 */
@@ -111,10 +108,7 @@
         margin: 10px auto;
         width: 80%;
       }
-      .content {
-        max-width: 600px;
-        margin: auto;
-      }
+      .content {max-width: 600px; margin: auto; }
       .choice-btn {
         display: block;
         width: 100%;
@@ -130,16 +124,13 @@
         white-space: pre-line;
       }
     </style>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
   </head>
   <body>
     <div class="container">
       <!-- 首頁 -->
       <div id="start-screen">
-        <h1>我的翼裝飛行訓練日誌</h1>
+        <h1>翼裝飛行訓練日誌</h1>
         <h4 class="center">踏上天空之路，書寫冒險篇章！</h4>
         <div class="intro">
           <h5>立體劇場電影《翼裝飛行》的內容化為這款小遊戲，。</h5>
@@ -158,13 +149,13 @@
             ><br />遊戲結束後，將根據你的選擇獲得不同的翼裝飛行訓練日誌。
           </p>
         </div>
-        <button onclick="nextStep()">開始創建我的日誌</button>
+        <button onclick="startGame()">開始創建我的日誌</button>
       </div>
 
       <!-- 問題頁面 -->
       <div id="question-screen" class="hidden">
         <h2 id="question-title"></h2>
-        <p style="text-align: justify" id="question-text"></p>
+        <p style="text-align: center" id="question-text"></p>
         <div id="question-options"></div>
       </div>
       <!-- 知識頁 -->
@@ -253,58 +244,58 @@
             C: "碳纖維強化材質提供更高剛性與抗風能力，提升飛行穩定性。",
           },
         },
-      ]
+      ];
 
       function formatknowledge(knowledge) {
         return knowledge
           .replace(/\n/g, "<br>") // 若你 intro 裡是用換行符號斷行，也可以加這行
-          .replace(/\s{2,}/g, "") // 清除多餘空白
+          .replace(/\s{2,}/g, ""); // 清除多餘空白
       }
 
       function startGame() {
-        document.getElementById("start-screen").classList.add("hidden")
-        state.step = 0
-        state.answers = {}
-        state.fatal = false
-        state.journalParts = []
-        showQuestion()
+        document.getElementById("start-screen").classList.add("hidden");
+        state.step = 0;
+        state.answers = {};
+        state.fatal = false;
+        state.journalParts = [];
+        showQuestion();
       }
 
       function showQuestion() {
-        const step = state.step
-        const q = questions[step]
+        const step = state.step;
+        const q = questions[step];
         const qOptBox = document.getElementById("question-options");
         qOptBox.innerHTML = "";
-        document.getElementById("question-screen").classList.remove("hidden")
-        document.getElementById("question-title").textContent = q.text
-        document.getElementById("question-text").textContent = q.question
+        document.getElementById("question-screen").classList.remove("hidden");
+        document.getElementById("question-title").textContent = q.text;
+        document.getElementById("question-text").textContent = q.question;
         if (q.isWeather) {
           const randomWeather =
-            weatherOptions[Math.floor(Math.random() * weatherOptions.length)]
-          state.currentWeather = randomWeather
+                weatherOptions[Math.floor(Math.random() * weatherOptions.length)];
+          state.currentWeather = randomWeather;
 
-          document.getElementById("question-title").textContent = `今天的天氣是：${randomWeather.label}`
+          document.getElementById("question-title").textContent = `今天的天氣是：${randomWeather.label}`;
 
-          const yesBtn = document.createElement("button")
-          yesBtn.textContent = "是的，開始飛行！"
-          yesBtn.className = "choice-btn"
+          const yesBtn = document.createElement("button");
+          yesBtn.textContent = "是的，開始飛行！";
+          yesBtn.className = "choice-btn";
           yesBtn.onclick = () => {
-            state.answers[question.key] = randomWeather.key
+            state.answers[q.key] = randomWeather.key
             if (randomWeather.key === "D") state.fatal = true
             //state.step++
             nextQuestion()
-          }
-          qOptBox.appendChild(yesBtn)
+          };
+          qOptBox.appendChild(yesBtn);
 
-          const noBtn = document.createElement("button")
-          noBtn.textContent = "擇日再戰，換個天氣吧"
-          noBtn.className = "choice-btn"
-          noBtn.onclick = () => showQuestion()
-          qOptBox.appendChild(noBtn)
-          return
+          const noBtn = document.createElement("button");
+          noBtn.textContent = "擇日再戰，換個天氣吧";
+          noBtn.className = "choice-btn";
+          noBtn.onclick = () => showQuestion();
+          qOptBox.appendChild(noBtn);
+          return;
         }
 
-        Object.entries(question.options).forEach(([key, label]) => {
+        Object.entries(q.options).forEach(([key, label]) => {
           const btn = document.createElement("button");
           btn.textContent = label;
           btn.className = "choice-btn";
@@ -317,107 +308,107 @@
       }
 
       function renderKnowledgePage(question, selectedKey) {
-      	document.getElementById("question-screen").classList.add("hidden");
-      	document.getElementById("knowledge-screen").classList.remove("hidden");
-        
+        document.getElementById("question-screen").classList.add("hidden");
+        document.getElementById("knowledge-screen").classList.remove("hidden");
+
         document.getElementById("knowledge-text").innerHTML = formatknowledge(question.knowledge[selectedKey]);
-        
-        const step = state.step
-        const info = questions[step]
-        const link = info && info.link
-        const linkArea = document.getElementById("info-link")
+
+        const step = state.step;
+        const info = questions[step];
+        const link = info && info.link;
+        const linkArea = document.getElementById("info-link");
         if (link) {
-          linkArea.innerHTML = "<p>相關內容</p>"
+          linkArea.innerHTML = "<p>相關內容</p>";
 
           // 情況 1：多個網址
           if (Array.isArray(link)) {
             link.forEach((l) => {
               linkArea.innerHTML += `<a href="${l.url}" target="_blank" style="display:block; color:#00ccff;">${l.text}</a>`
-            })
+            });
           }
           // 情況 2：單一網址
           else if (link.url && link.text) {
-            linkArea.innerHTML += `<a href="${link.url}" target="_blank" style="display:block; color:#00ccff;">${link.text}</a>`
+            linkArea.innerHTML += `<a href="${link.url}" target="_blank" style="display:block; color:#00ccff;">${link.text}</a>`;
           }
 
-          linkArea.classList.remove("hidden")
+          linkArea.classList.remove("hidden");
         } else {
-          linkArea.innerHTML = ""
-          linkArea.classList.add("hidden")
+          linkArea.innerHTML = "";
+          linkArea.classList.add("hidden");
         }
       }
 
       function nextQuestion() {
-        document.getElementById("knowledge-screen").classList.add("hidden")
-        state.step++
+        document.getElementById("knowledge-screen").classList.add("hidden");
+        state.step++;
         if (state.step < questions.length) {
-          showQuestion()
+          showQuestion();
         } else {
-          showOutput()
+          showOutput();
         }
       }
 
       function showOutput() {
-        document.getElementById("output-screen").classList.remove("hidden")
+        document.getElementById("output-screen").classList.remove("hidden");
 
-        const outputEl = document.getElementById("output")
-        outputEl.innerText = ""
-        const lines = []
+        const outputEl = document.getElementById("output");
+        outputEl.innerText = "";
+        const lines = [];
 
-        lines.push("今天是個重要的日子，我開始了翼裝飛行的訓練之旅。")
+        lines.push("今天是個重要的日子，我開始了翼裝飛行的訓練之旅。");
 
         if (state.answers.location === "A")
           lines.push(
             "我來到壯麗的愛格爾峰，這裡是無數冒險者夢想的挑戰地點。氣候變化迅速，每一步都得萬分小心。",
-          )
+          );
         if (state.answers.location === "B")
           lines.push(
             "我選擇在炙熱的摩押沙漠訓練，這裡的岩壁與高溫構成極具挑戰的飛行環境。",
-          )
+          );
         if (state.answers.location === "C")
           lines.push(
             "我來到澳洲希爾灣的高原，這裡氣候乾燥、視野開闊，是進行高空飛行的絕佳場所。",
-          )
+          );
 
         if (state.answers.weather === "D") {
           lines.push(
             "不幸的是，我在能見度為零的情況下起飛，最終迷失在茫茫的大雪與風暴之中……這次任務，以沉默告終。",
-          )
+          );
         } else {
           const weatherLabel = {
             A: "天氣晴朗，氣流穩定，讓我更專注於技術的提升。",
             B: "氣壓變化頻繁，我必須時刻調整姿態來應對風勢。",
             C: "強風與低能見度增添訓練難度，也磨練了我的應變能力。",
-          }
-          lines.push(weatherLabel[state.answers.weather])
+          };
+          lines.push(weatherLabel[state.answers.weather]);
 
           if (state.answers.training === "A")
             lines.push(
               "我專注於提升升力的訓練，透過角度與姿勢的調整來增加滑翔距離。",
-            )
+            );
           if (state.answers.training === "B")
             lines.push(
               "我進行了編隊飛行訓練，與夥伴保持良好距離，避免湍流干擾。",
-            )
+            );
           if (state.answers.training === "C")
-            lines.push("我模擬了高空加速與減速的場景，學習控制姿態與速度變化。")
+            lines.push("我模擬了高空加速與減速的場景，學習控制姿態與速度變化。");
 
           if (state.answers.gear === "A")
             lines.push(
               "我使用的是傳統尼龍飛鼠裝，儘管簡單，卻能幫助我強化基本飛行技巧。",
-            )
+            );
           if (state.answers.gear === "B")
             lines.push(
               "我穿上新型氣室裝備，能快速充氣穩定滑翔，是提升效率的重要工具。",
-            )
+            );
           if (state.answers.gear === "C")
             lines.push(
               "我配備碳纖維強化飛鼠裝，提供卓越的穩定性，讓我更有信心完成訓練。",
-            )
+            );
 
           lines.push(
             "訓練雖然艱難，但我從中學到了寶貴的飛行知識與經驗。這一切都將成為我通往高空夢想的基石。",
-          )
+          );
         }
         // 打字機效果
         let index = 0
@@ -426,20 +417,20 @@
             outputEl.innerText += lines[index] + "\n"
             index++
             setTimeout(typeLine, 1000)
-          }
+          };
         }
-        typeLine()
+        typeLine();
       }
 
       function downloadJournal() {
-        const text = document.getElementById("output").innerText
-        const blob = new Blob([text], { type: "text/plain" })
-        const url = URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = "翼裝飛行訓練日誌.txt"
-        a.click()
-        URL.revokeObjectURL(url)
+        const text = document.getElementById("output").innerText;
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "翼裝飛行訓練日誌.txt";
+        a.click();
+        URL.revokeObjectURL(url);
       }
     </script>
   </body>
