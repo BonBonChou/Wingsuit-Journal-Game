@@ -106,7 +106,7 @@
         margin-bottom: 1em;
         text-align: justify;
       }
-      .option-button {
+      .choice-button {
         display: block;
         margin: 10px auto;
         width: 80%;
@@ -165,11 +165,11 @@
       <div id="question-screen" class="hidden">
         <h2 id="question-title"></h2>
         <p style="text-align: justify" id="question-text"></p>
-        <div id="options-container"></div>
+        <div id="question-options"></div>
       </div>
       <!-- 知識頁 -->
       <div class="hidden" id="knowledge-screen">
-        <h3 id="knowledge-title">知識補充</h3>
+        <!--<h3 id="knowledge-title">知識補充</h3>-->
         <p id="knowledge-text"></p>
         <div id="info-link" class="hidden" style="margin-top: 1em"></div>
         <button onclick="nextQuestion()">繼續</button>
@@ -273,6 +273,8 @@
       function showQuestion() {
         const step = state.step
         const q = questions[step]
+        const qOptBox = document.getElementById("question-options");
+        qOptBox.innerHTML = "";
         document.getElementById("question-screen").classList.remove("hidden")
         document.getElementById("question-title").textContent = q.text
         document.getElementById("question-text").textContent = q.question
@@ -281,10 +283,7 @@
             weatherOptions[Math.floor(Math.random() * weatherOptions.length)]
           state.currentWeather = randomWeather
 
-          const title = document.createElement("h3")
-          title.className = "question-text"
-          title.textContent = `今天的天氣是：${randomWeather.label}`
-          qTextBox.appendChild(title)
+          document.getElementById("question-title").textContent = `今天的天氣是：${randomWeather.label}`
 
           const yesBtn = document.createElement("button")
           yesBtn.textContent = "是的，開始飛行！"
@@ -292,38 +291,38 @@
           yesBtn.onclick = () => {
             state.answers[question.key] = randomWeather.key
             if (randomWeather.key === "D") state.fatal = true
-            state.step++
-            renderQuestion()
+            //state.step++
+            nextQuestion()
           }
           qOptBox.appendChild(yesBtn)
 
           const noBtn = document.createElement("button")
           noBtn.textContent = "擇日再戰，換個天氣吧"
           noBtn.className = "choice-btn"
-          noBtn.onclick = () => renderQuestion()
+          noBtn.onclick = () => showQuestion()
           qOptBox.appendChild(noBtn)
           return
         }
 
-        const optionsContainer = document.getElementById("options-container")
-        optionsContainer.innerHTML = ""
-        q.options.forEach((opt, index) => {
-          const btn = document.createElement("button")
-          btn.textContent = opt
-          btn.className = "option-button"
-          //btn.onclick = () => checkAnswer(index);
-
-          optionsContainer.appendChild(btn)
-        })
+        Object.entries(question.options).forEach(([key, label]) => {
+          const btn = document.createElement("button");
+          btn.textContent = label;
+          btn.className = "choice-btn";
+          btn.onclick = () => {
+            state.answers[q.key] = key;
+            renderKnowledgePage(q, key);
+          };
+          qOptBox.appendChild(btn);
+        });
       }
 
-      function showKnowledge() {
+      function renderKnowledgePage(question, selectedKey) {
+      	document.getElementById("question-screen").classList.add("hidden");
+      	document.getElementById("knowledge-screen").classList.remove("hidden");
+        
+        document.getElementById("knowledge-text").innerHTML = formatknowledge(question.knowledge[selectedKey]);
+        
         const step = state.step
-        document.getElementById("question-screen").classList.add("hidden")
-        document.getElementById("knowledge-screen").classList.remove("hidden")
-        document.getElementById("knowledge-text").innerHTML = formatknowledge(
-          questions[step].knowledge,
-        )
         const info = questions[step]
         const link = info && info.link
         const linkArea = document.getElementById("info-link")
