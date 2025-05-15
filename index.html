@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
   <head>
     <meta charset="UTF-8" />
@@ -8,7 +8,7 @@
       body {
         font-family: "Noto Sans TC", sans-serif;
         background: linear-gradient(to right, #e8e7cf, #edebaf, #edebab);
-        color: #000000;
+        color: #000;
         text-align: center;
         padding: 2em;
       }
@@ -28,7 +28,7 @@
         margin-bottom: 30px; /* 下方留空 */
         text-shadow:
           0 0 5px #c2a200,
-          /* 淺紫光暈 */ 0 0 10px #c2a200,
+          0 0 10px #c2a200,
           0 0 15px #c2a200,
           0 0 20px #c2a200;
         /*background-color: #000000;   /* 建議加深背景讓光暈更明顯 */
@@ -38,7 +38,6 @@
       h4 {
         font-size: 1.4em;
         line-height: 1.6;
-
         margin-bottom: 1em;
         color: #e3ce0e;
       }
@@ -79,7 +78,8 @@
         display: block;
         margin: 1em auto;
         width: 90%;
-      } cursor: pointer;
+        cursor: pointer;
+      } 
       #question-title {
         font-size: 2em; /* 你可以依需求調整數值 */
         font-weight: bold; /* 也可以設為 normal, lighter 等 */
@@ -90,12 +90,6 @@
         font-size: 1.5em;
         line-height: 1.6;
         margin-bottom: 1em;
-      }
-      #knowledge-title {
-        font-size: 2em; /* 你可以依需求調整數值 */
-        font-weight: bold; /* 也可以設為 normal, lighter 等 */
-        margin-bottom: 0.5em;
-        color: #9a42ff;
       }
       #knowledge-text {
         font-size: 1.5em;
@@ -122,6 +116,7 @@
         border: 1px solid #ccc;
         background: #f9f9f9;
         white-space: pre-line;
+        text-align: justify;
       }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
@@ -160,7 +155,6 @@
       </div>
       <!-- 知識頁 -->
       <div class="hidden" id="knowledge-screen">
-        <!--<h3 id="knowledge-title">知識補充</h3>-->
         <p id="knowledge-text"></p>
         <div id="info-link" class="hidden" style="margin-top: 1em"></div>
         <button onclick="nextQuestion()">繼續</button>
@@ -168,7 +162,7 @@
 
       <!-- 輸出頁面 -->
       <div id="output-screen" class="hidden">
-        <h2>🌟 你的訓練日誌</h2>
+        <h2>🌟 我的訓練日誌</h2>
         <div id="output"></div>
         <button onclick="location.reload()">重新開始</button>
         <button onclick="downloadJournal()">下載日誌</button>
@@ -236,7 +230,7 @@
           options: {
             A: "傳統尼龍飛鼠裝",
             B: "新型氣室裝",
-            C: "碳纖維強化裝",
+            C: "碳纖維強化氣室裝",
           },
           knowledge: {
             A: "早期飛鼠裝較為簡單，對飛行者的姿勢控制要求更高。",
@@ -263,12 +257,14 @@
 
       function showQuestion() {
         const step = state.step;
-        const q = questions[step];
-        const qOptBox = document.getElementById("question-options");
-        qOptBox.innerHTML = "";
+        const q = questions[step];        
         document.getElementById("question-screen").classList.remove("hidden");
         document.getElementById("question-title").textContent = q.text;
         document.getElementById("question-text").textContent = q.question;
+
+        
+        const qOptBox = document.getElementById("question-options");
+        qOptBox.innerHTML = "";
         if (q.isWeather) {
           const randomWeather =
                 weatherOptions[Math.floor(Math.random() * weatherOptions.length)];
@@ -355,7 +351,12 @@
         outputEl.innerText = "";
         const lines = [];
 
-        lines.push("今天是個重要的日子，我開始了翼裝飛行的訓練之旅。");
+        const introLines = [
+          "今天是個重要的日子，我開始了翼裝飛行的訓練之旅。",
+          "站在起飛點，我知道這將是改變我的飛行人生的一天。",
+          "經過長時間準備，我終於踏上翼裝飛行的訓練征途。"
+        ];
+        lines.push(introLines[Math.floor(Math.random() * introLines.length)]);
 
         if (state.answers.location === "A")
           lines.push(
@@ -371,9 +372,12 @@
           );
 
         if (state.answers.weather === "D") {
-          lines.push(
-            "不幸的是，我在能見度為零的情況下起飛，最終迷失在茫茫的大雪與風暴之中……這次任務，以沉默告終。",
-          );
+          const fatalEndings = {
+            A: "不幸的是，我在能見度為零的情況下起飛，最終迷失在茫茫的大雪與風暴之中……這次任務，以沉默告終。",
+            B: "不幸的是，我在能見度為零的情況下起飛，最終迷失在滾滾黃沙與沙塵暴之中……這次任務，以沉默告終。",
+            C: "不幸的是，我在能見度為零的情況下起飛，最終迷失在猛烈暴風雨的席捲之中……這次任務，以沉默告終。"
+          };
+          lines.push(fatalEndings[state.answers.location]);
         } else {
           const weatherLabel = {
             A: "天氣晴朗，氣流穩定，讓我更專注於技術的提升。",
