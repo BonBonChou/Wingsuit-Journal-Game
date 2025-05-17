@@ -48,6 +48,13 @@
         margin-bottom: 1em;
         color: #b3a102;
       }
+      h6 {
+        font-size: 1.3em;
+        margin: 1em 0;
+        text-align: justify;
+        color: #e3ce0e;
+        text-align: center;
+      }
       .intro {
         text-align: left;
         margin-bottom: 0em;
@@ -110,13 +117,30 @@
         padding: 1em;
         font-size: 1em;
       }
+      #final-highlight {
+        font-size: 1.5em;
+        margin: 1em 0;
+        font-weight: bold;
+        text-align: center;
+        background: linear-gradient(270deg, red, orange, yellow, green, blue, indigo, violet, red);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: rainbow 2s ease infinite;
+      }
       #output {
+        font-size: 1.2em;
         margin-top: 2em;
         padding: 1em;
         border: 1px solid #ccc;
         background: #f9f9f9;
         white-space: pre-line;
         text-align: justify;
+      }
+      @keyframes rainbow {
+        0% { background-position: 100% 50%; }
+        50% { background-position: 0% 50%; }
+        100% { background-position: 100% 50%; }
       }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
@@ -135,7 +159,7 @@
             🌌 <strong>背景故事</strong><br/>你將踏上和主角羅貝塔相似的飛行旅程，透過一連串的選擇體驗飛行訓練、挑戰極限。在這段訓練旅途中，你將學會判讀天氣、調整飛行姿態、選擇合適裝備等等，並理解背後的物理知識。
           </p>
           <p>
-            🧠 <strong>玩法簡介</strong><br />遊戲總共 10 種情境。每種情境只能選擇一個答案。
+            🧠 <strong>玩法簡介</strong><br />遊戲總共 5 種情境。每種情境只能選擇一個答案。
           </p>
           <p>
             🏆 <strong>目標與結局</strong
@@ -160,10 +184,10 @@
       
       <!-- 結尾頁 -->
       <div id="final-message-screen" class="hidden">
-        <h6>冒險家找到了許多前人尚未嘗試的路線，<br>將我們帶到從未有人到過的地方，完成從未有人做過的事情。<br>這就是夢想——尋找終極路線，並在有生之年講述這個故事。</h6>
-        <h2 id="final-highlight">未來的科學家，會以你的分析為起點，<br>繼續追尋宇宙的更深層真相。</h2>
+        <h6>冒險家找到了許多前人尚未嘗試的路線，<br>將我們帶到從未有人到過的地方，<br>完成從未有人做過的事情。</h6>
+        <h2 id="final-highlight">這就是夢想——<br>尋找終極路線，並在有生之年講述這個故事。</h2>
         <div id="FMinfo-link" class="hidden" style="margin-top: 1em;"></div>
-        <button onclick="showOutput()">下一頁</button>
+        <button onclick="showOutput()">查看日誌</button>
       </div>
 
       <!-- 輸出頁面 -->
@@ -292,7 +316,9 @@
             
             雖然阻力較大、滑翔距離有限，但能有效幫助飛行者理解升力原理、熟悉空中姿勢，是累積經驗的理想起點。`,
             B: `新型飛鼠裝結合氣室結構與碳纖維內襯，能在跳躍後迅速充氣膨脹，像滑翔翼一樣形成剛性結構。這使飛鼠裝更快產生升力，縮短垂直下墜段，提早進入滑翔狀態。
+            
             進氣口是關鍵設計，它導入氣流讓整件裝備充氣撐開，使裝備穩定如機翼，並提升整體抗風能力。
+            
             氣室裝備與碳纖維的結合讓飛行更穩定、更有效率，也讓飛行者能挑戰過去難以抵達的區域，是現今最主流的翼裝類型。`            
           },
         },
@@ -411,17 +437,19 @@
           { text: "國家地理雜誌：定點跳傘再傳死亡意外（下）", url: "https://www.natgeomedia.com/explore/article/content-3330.html"}
         ]        
         if (link) {
-          linkArea.innerHTML = "<p>相關內容</p>";
+          linkArea.innerHTML = "<p>延伸內容</p>";
 
           if (Array.isArray(link)) {
             link.forEach((l) => {
               linkArea.innerHTML += `<a href="${l.url}" target="_blank" style="display:block; color:#00ccff;">${l.text}</a>`
             });
           }
+          linkArea.classList.remove("hidden");
         }
       }
 
       function showOutput() {
+      	document.getElementById("final-message-screen").classList.add("hidden");
         document.getElementById("output-screen").classList.remove("hidden");
 
         const outputEl = document.getElementById("output");
