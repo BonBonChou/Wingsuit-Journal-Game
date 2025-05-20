@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
   <!--引入 jsPDF-->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <head>
@@ -603,17 +605,28 @@
 
       async function downloadJournal() {
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        const text = document.getElementById("output").innerText;
 
-        // 多行處理：自動換行（避免文字跑出頁面）
-        const lines = doc.splitTextToSize(text, 180); // 180 是寬度（單位為 mm）
+        const journalElement = document.getElementById("output");
 
-        doc.setFont("helvetica", "normal");
-        doc.setFontSize(12);
-        doc.text(lines, 15, 20); // 起始位置 x=15, y=20
+        // 將文字畫面轉成圖片
+        const canvas = await html2canvas(journalElement, {
+          scale: 2
+        });
+        const imgData = canvas.toDataURL("image/png");
 
-        doc.save("翼裝飛行訓練日誌.pdf");
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4"
+        });
+
+        // 計算圖片大小（寬度 180mm，等比例縮放）
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = 180;
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, "PNG", 15, 20, pdfWidth, pdfHeight);
+        pdf.save("翼裝飛行訓練日誌.pdf");
       }
 
     </script>
