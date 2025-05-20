@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+  <!--引入 jsPDF-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -599,16 +601,21 @@
         return array[Math.floor(Math.random() * array.length)];
       }
 
-      function downloadJournal() {
+      async function downloadJournal() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
         const text = document.getElementById("output").innerText;
-        const blob = new Blob([text], { type: "text/plain" });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "翼裝飛行訓練日誌.txt";
-        a.click();
-        URL.revokeObjectURL(url);
+
+        // 多行處理：自動換行（避免文字跑出頁面）
+        const lines = doc.splitTextToSize(text, 180); // 180 是寬度（單位為 mm）
+
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(12);
+        doc.text(lines, 15, 20); // 起始位置 x=15, y=20
+
+        doc.save("翼裝飛行訓練日誌.pdf");
       }
+
     </script>
   </body>
 </html>
