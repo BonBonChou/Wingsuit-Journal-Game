@@ -199,7 +199,7 @@
         <h2>🌟 我的訓練日誌</h2>
         <div id="output"></div>
         <button onclick="location.reload()">重新開始</button>
-        <button onclick="downloadJournal()">下載日誌</button>
+        <!-- <button onclick="downloadJournal()">下載日誌</button>-->
       </div>
     </div>
 
@@ -603,7 +603,7 @@
         return array[Math.floor(Math.random() * array.length)];
       }
 
-      async function downloadJournal() {
+      /*async function downloadJournal() {
         const { jsPDF } = window.jspdf;
 
         const journalElement = document.getElementById("output");
@@ -627,7 +627,7 @@
 
         pdf.addImage(imgData, "PNG", 15, 20, pdfWidth, pdfHeight);
         pdf.save("翼裝飛行訓練日誌.pdf");
-      }
+      }*/
 
     </script>
   </body>
