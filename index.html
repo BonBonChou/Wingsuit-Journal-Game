@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
   <!--引入 jsPDF-->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -132,6 +132,17 @@
         -webkit-text-fill-color: transparent;
         animation: rainbow 2s ease infinite;
       }
+      
+      .risk-notice {
+        text-align: center;
+        font-size: 1.5em;
+        color: #e60039;
+        margin-bottom: 1em;
+        height: 1.5em; /* 保留空間，淡出後不影響版面跳動 */
+        transition: opacity 0.5s ease;
+        opacity: 0;
+      }
+
       #output {
         font-size: 1.2em;
         margin-top: 2em;
@@ -178,6 +189,7 @@
         <h2 id="question-title"></h2>
         <p style="text-align: center" id="question-text"></p>
         <div id="question-options"></div>
+        <div id="risk-notice" class="risk-notice"></div>
       </div>
       <!-- 知識頁 -->
       <div class="hidden" id="knowledge-screen">
@@ -209,6 +221,9 @@
         answers: {},
         fatal: false,
         journalParts: [],
+        risk: 0,
+        riskRecord: [], // 存每題風險數值
+        hasFatalRisk: false, // 是否有 +10 題
       }
 
       const locations = {
@@ -385,10 +400,33 @@
           btn.className = "choice-btn";
           btn.onclick = () => {
             state.answers[q.key] = key;
-            renderKnowledgePage(q, key);
+            applyRiskValue(q.key, key); // 新增：套用風險值 + 顯示
+            //renderKnowledgePage(q, key);
           };
           qOptBox.appendChild(btn);
         });
+      }
+      
+      function getRiskValue(qKey, selectedKey) {
+        if (qKey === "weather" && selectedKey === "D") return 10;
+
+        const roll = Math.random();
+        if (roll < 0.01) return 10;
+        if (roll < 0.11) return 2;
+        if (roll < 0.31) return 1;
+        return 0;
+      }
+
+      function applyRiskValue(qKey, selectedKey) {
+        const risk = getRiskValue(qKey, selectedKey);
+        state.risk += risk;
+        state.riskRecord.push(risk);
+        if (risk === 10 && !(state.riskRecord.every(v => v === 2))) {
+          state.hasFatalRisk = true;
+        }
+
+        // 顯示 "+X" 提示畫面
+        showRiskNotice(risk, () => renderKnowledgePage(questions[state.step], selectedKey));
       }
 
       function renderKnowledgePage(question, selectedKey) {
@@ -491,23 +529,74 @@
 
 
         const locationLines = {
-          A: [
-            "我來到壯麗的愛格爾峰，這裡被稱為死亡之牆，是無數冒險者夢想的挑戰地點。",
-            "我來到壯麗的愛格爾峰，這裡天氣變化極快，訓練時需格外警覺每一個風的訊號。",
-            "我來到壯麗的愛格爾峰，這裡有著翼裝飛行最高的風險與榮耀，也有超過 60 位冒險家未能生還。"
-          ],
-          B: [
-            "我選擇了摩押沙漠，在炙熱懸崖間進行懸崖起跳與貼地飛行訓練。",
-            "我選擇了摩押沙漠，儘管這裡高度不如阿爾卑斯山，但峭壁地形與熱空氣帶來獨特挑戰。",
-            "我選擇了摩押沙漠，這裡的高溫使升力難以掌握，每一次起跳都仰賴極高的判斷力與反應速度。"
-          ],
-          C: [
-            "我來到澳洲的希爾灣，從高空俯瞰筆直海岸與壯麗海景，令人震撼。",
-            "我來到澳洲的希爾灣，這裡的氣流穩定，是理想的高空滑翔與風阻控制訓練場。",
-            "我來到澳洲的希爾灣，這裡寬廣的沙灘成為完美著陸場，也讓我更安心地練習高速長距離飛行。"
-          ]
+          A: {
+            0: [
+              "我來到壯麗的愛格爾峰，這裡被稱為死亡之牆，是無數冒險者夢想的挑戰地點。",
+              "阿爾卑斯山的愛格爾峰氣候變化極快，訓練時需格外警覺每一個風的訊號。",
+              "這裡有著翼裝飛行最高的風險與榮耀，也有超過60位冒險家未能生還。"
+            ],
+            1: [
+              "抵達愛格爾峰後，我注意到山腰有強風痕跡，訓練過程更加緊張。",
+              "高海拔與亂流交錯的地形讓我需要不斷調整飛行策略。",
+              "氣候變幻莫測，在這裡每一秒的飛行都需要高度集中。"
+            ],
+            2: [
+              "一場突如其來的冷鋒幾乎打亂了整個訓練計畫，我只能臨機應變。",
+              "在大雪壟罩的山谷中，我幾度迷失方向，所幸成功穩住姿態。",
+              "愛格爾峰今天展現了它最險惡的一面，訓練過程驚險萬分。"
+            ],
+            10: [
+              "我在愛格爾峰的飛行中遭遇暴風雪，視線全失，最後被迫終止整個訓練。"
+            ]
+          },
+          
+          B: {
+            0: [
+              "我選擇了摩押沙漠，在炙熱懸崖間進行懸崖起跳與貼地飛行訓練。",
+              "儘管這裡高度不如阿爾卑斯山，但峽谷地形與熱空氣帶來獨特挑戰。",
+              "高溫使升力難以掌握，每一次起跳都仰賴極高的判斷力與反應速度。"
+            ],
+            1: [
+              "今天的沙漠氣流不穩，我必須反覆調整飛行姿態維持平衡。",
+              "陽光造成地表過熱，強烈對流讓飛行軌跡變得難以預測。",
+              "飛行中突遇氣旋，我被迫提早脫離預定路線。"
+            ],
+            2: [
+              "突如其來的沙塵暴遮蔽了整片視野，我只能靠記憶與儀器定位。",
+              "在狂風與對流交錯的峽谷間飛行，每一次轉彎都驚心動魄。",
+              "摩押今天成了飛行者的考驗場，我幾乎無法控制裝備。"
+            ],
+            10: [
+              "我在摩押沙漠遭遇劇烈沙塵暴，被迫中止飛行並緊急脫離訓練場域。"
+            ]
+          },
+          
+          C: {
+            0: [
+              "我來到澳洲的希爾灣，從高空俯瞰筆直海岸與壯麗海景，令人震撼。",
+              "這裡的氣流穩定，是理想的高空滑翔與風阻控制訓練場。",
+              "寬廣的沙灘成為完美著陸場，也讓我更安心地練習高速長距離飛行。"
+            ],
+            1: [
+              "飛行途中海風忽強忽弱，我必須快速反應姿態調整。",
+              "幾次意外的風切讓我偏離原本的軌道。",
+              "高空中風向變化明顯，我必須重新評估降落點。"
+            ],
+            2: [
+              "希爾灣上空突起暴風，我一度無法穩定滑翔。",
+              "氣流亂竄導致我進入不穩定區域，幾乎無法回復姿勢。",
+              "原本平靜的海岸線今天風雲變色，我驚險完成飛行。"
+            ],
+            10: [
+              "在希爾灣訓練時，突如其來的暴風捲走了我預定的飛行控制，訓練被迫中斷。"
+            ]
+          }
         };
-        lines.push(randomFrom(locationLines[state.answers.location]));
+        const locationKey = state.answers.location;
+        const locationRisk = state.riskRecord[0]; // 地點是第一題
+        const sentenceSet = locationSentences[locationKey][locationRisk];
+        lines.push(randomFrom(sentenceSet));
+
 
 
         if (state.answers.weather === "D") {
@@ -577,15 +666,36 @@
                 "這套裝備提供極高剛性與升力，使我在高速飛行中保持穩定，即使遇上亂流也能從容應對。",
                 "氣室設計與碳纖維內襯的結合讓飛行更精準、更高效，是挑戰複雜飛行路線的最佳選擇。"
               ])
-            );
+            );          
 
-          lines.push(
-            randomFrom([
-              "訓練雖然艱難，但我從中學到了寶貴的飛行知識與經驗。這一切都將成為我通往高空夢想的基石。",
-              "這段飛行旅程教會我尊重風的力量，也讓我更理解自己在空中的每一個選擇。",
-              "每一次飛行都是與自然對話的機會，而今天的訓練，讓我更加堅定了追夢的決心。"
-            ])
-          );
+          if (!state.hasFatalRisk) {
+            let endingSet = [];
+
+            if (state.risk <= 3) {
+              endingSet = [
+                "訓練雖然艱難，但我從中學到了寶貴的飛行知識與經驗。這一切都將成為我通往高空夢想的基石。",
+                "這段飛行旅程教會我尊重風的力量，也讓我更理解自己在空中的每一個選擇。",
+                "每一次飛行都是與自然對話的機會，而今天的訓練，讓我更加堅定了追夢的決心。"
+              ];
+            } else if (state.risk <= 6) {
+              endingSet = [
+                "儘管過程中出現了些小狀況，但我成功完成了訓練，也獲得了珍貴的經驗。",
+                "幾次驚險與挑戰讓我更成熟，也更加敬畏這片天空。",
+                "訓練過程比預期更曲折，但我挺了過來，也更懂得風險管理的重要性。"
+              ];
+            } else if (state.risk <= 9) {
+              endingSet = [
+                "這次飛行充滿困難與險象，但我撐過來了。",
+                "我一度失去控制，但靠著訓練與經驗，最終仍平安著陸。",
+                "這次訓練讓我真正體會到，極限與生還之間的距離有多近。"
+              ];
+            } else {
+              // fallback（應該不會進入這邊）
+              endingSet = ["這趟飛行失敗了，但也讓我看清了自己最需要學會的，是謙遜與準備。"];
+            }
+
+            lines.push(randomFrom(endingSet));
+          }
         }
         // 打字機效果
         let index = 0
@@ -597,10 +707,30 @@
           };
         }
         typeLine();
+        if (state.hasFatalRisk) {
+          // 中斷日誌輸出，提早結束
+          outputEl.innerText += "\n在這次訓練中，一場重大失誤終結了我的飛行計畫……";
+          return;
+        }  
       }
       
       function randomFrom(array) {
         return array[Math.floor(Math.random() * array.length)];
+      }
+      
+      function showRiskNotice(value, callback) {
+        const box = document.getElementById("risk-notice");
+        box.textContent = `⚠️風險值 +${value}`;
+        box.style.opacity = "1";
+
+        setTimeout(() => {
+          box.style.opacity = "0"; // 淡出
+        }, 1000);
+
+        setTimeout(() => {
+          box.textContent = ""; // 清空文字
+          callback();
+        }, 1500);
       }
 
       /*async function downloadJournal() {
