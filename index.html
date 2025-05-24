@@ -381,8 +381,7 @@
           yesBtn.onclick = () => {
             state.answers[q.key] = randomWeather.key
             if (randomWeather.key === "D") state.fatal = true
-            //state.step++
-            nextQuestion()
+            applyRiskValue(q.key, randomWeather.key);
           };
           qOptBox.appendChild(yesBtn);
 
@@ -425,8 +424,16 @@
           state.hasFatalRisk = true;
         }
 
-        // 顯示 "+X" 提示畫面
-        showRiskNotice(risk, () => renderKnowledgePage(questions[state.step], selectedKey));
+        // 顯示 "+X" 提示後依題目決定跳哪個函式
+        const afterRisk = () => {
+          if (qKey === "weather") {
+            nextQuestion();
+          } else {
+            renderKnowledgePage(questions[state.step], selectedKey);
+          }
+        };
+
+        showRiskNotice(risk, afterRisk);
       }
 
       function renderKnowledgePage(question, selectedKey) {
@@ -528,7 +535,7 @@
         }
 
 
-        const locationLines = {
+        const locationSentences = {
           A: {
             0: [
               "我來到壯麗的愛格爾峰，這裡被稱為死亡之牆，是無數冒險者夢想的挑戰地點。",
@@ -705,13 +712,17 @@
             index++
             setTimeout(typeLine, 1000)
           };
+          if (state.hasFatalRisk) {
+            // 中斷日誌輸出，提早結束
+            //outputEl.innerText += "\n在這次訓練中，一場重大失誤終結了我的飛行計畫……";
+            return;
+          };
+          
         }
+        
         typeLine();
-        if (state.hasFatalRisk) {
-          // 中斷日誌輸出，提早結束
-          outputEl.innerText += "\n在這次訓練中，一場重大失誤終結了我的飛行計畫……";
-          return;
-        }  
+        
+        
       }
       
       function randomFrom(array) {
