@@ -1,9 +1,5 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
-  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
-  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
-  <!--引入 jsPDF-->
-  <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -164,7 +160,7 @@
     <div class="container">
       <!-- 首頁 -->
       <div id="start-screen">
-        <h1>翼裝飛行訓練日誌T</h1>
+        <h1>翼裝飛行訓練日誌</h1>
         <h4 class="center">踏上天空之路，書寫冒險篇章！</h4>
         <div class="intro">
           <h5>翼裝飛行是一項結合速度、技巧與風險的極限運動。立體劇場電影《翼裝飛行》的內容化為這款小遊戲，將你的旅程寫入一篇獨一無二的訓練日誌——</h5>
@@ -399,8 +395,13 @@
           btn.className = "choice-btn";
           btn.onclick = () => {
             state.answers[q.key] = key;
-            applyRiskValue(q.key, key); // 新增：套用風險值 + 顯示
-            //renderKnowledgePage(q, key);
+            
+            if (q.key === "location") {
+              // 第一題不處理風險，直接進知識頁
+              renderKnowledgePage(q, key);
+            } else {
+              applyRiskValue(q.key, key);
+            }
           };
           qOptBox.appendChild(btn);
         });
@@ -410,7 +411,7 @@
         if (qKey === "weather" && selectedKey === "D") return 10;
 
         const roll = Math.random();
-        if (roll < 0.01) return 10;
+        if (roll < 1.01) return 10;
         if (roll < 0.11) return 2;
         if (roll < 0.31) return 1;
         return 0;
@@ -505,6 +506,7 @@
         outputEl.innerText = "";
         const lines = [];
 
+				// 第一句
         const introLines = [
           "今天是個重要的日子，我開始了翼裝飛行的訓練之旅。",
           "站在起飛點，我知道這將是改變我的飛行人生的一天。",
@@ -512,100 +514,98 @@
         ];
         lines.push(randomFrom(introLines));
         
-        if (state.answers.flightplan === "A") {
+        // 第一題：地點
+        if (state.answers.location === "A") {
           lines.push(randomFrom([
-            "我花了好幾天親自踏查飛行地形，標出每一個可能的備用降落點。",
-            "在高海拔的地區反覆行走，讓我更了解地貌與風勢對飛行的潛在影響。",
+            "我來到壯麗的愛格爾峰，這裡被稱為死亡之牆，是無數冒險者夢想的挑戰地點。",
+            "阿爾卑斯山的愛格爾峰氣候變化極快，訓練時需格外警覺每一個風的訊號。",
             "事前走過所有路線，讓我在飛行時更能專注於技巧，而非擔憂未知。"
           ]));
         }
-        if (state.answers.flightplan === "B") {
+        if (state.answers.location === "B") {
           lines.push(randomFrom([
-            "我仔細比對天氣預報、風向圖與地形圖，模擬了多條飛行路線。",
-            "結合數據與預測工具，我規劃出一條避開強風與亂流的安全航線。",
-            "透過模擬工具，我能預判可能出現的風場變化與障礙物分布。"
+            "我選擇了摩押沙漠，在炙熱懸崖間進行懸崖起跳與貼地飛行訓練。",
+            "儘管這裡高度不如阿爾卑斯山，但峭壁地形與熱空氣帶來獨特挑戰。",
+            "高溫使升力難以掌握，每一次起跳都仰賴極高的判斷力與反應速度。"
           ]));
         }
-        if (state.answers.flightplan === "C") {
+        if (state.answers.location === "C") {
           lines.push(randomFrom([
-            "我根據過往經驗制定多套應變策略，確保每個突發狀況都能應對。",
-            "這次的計畫包含了三種備用飛行方案，讓我在空中更從容不迫。",
-            "我用腦中模擬飛行多次，每一個轉折點都預先安排了應變選項。"
+            "我來到澳洲的希爾灣，從高空俯瞰筆直海岸與壯麗海景，令人震撼。",
+            "這裡的氣流穩定，是理想的高空滑翔與風阻控制訓練場。",
+            "寬廣的沙灘成為完美著陸場，也讓我更安心地練習高速長距離飛行。"
           ]));
         }
-
-
-        const locationSentences = {
+        // 第二題：準備
+        const flightplanSentences = {
           A: {
             0: [
-              "我來到壯麗的愛格爾峰，這裡被稱為死亡之牆，是無數冒險者夢想的挑戰地點。",
-              "阿爾卑斯山的愛格爾峰氣候變化極快，訓練時需格外警覺每一個風的訊號。",
-              "這裡有著翼裝飛行最高的風險與榮耀，也有超過60位冒險家未能生還。"
+              "我花了好幾天親自踏查飛行地形，標出每一個可能的備用降落點。",
+              "我親自走遍訓練地區，熟悉每一處地形與可能影響飛行的氣流。",
+              "提前探查所有路線，讓我能把注意力放在飛行本身，而不是臨場摸索。"
             ],
             1: [
-              "抵達愛格爾峰後，我注意到山腰有強風痕跡，訓練過程更加緊張。",
-              "高海拔與亂流交錯的地形讓我需要不斷調整飛行策略。",
-              "氣候變幻莫測，在這裡每一秒的飛行都需要高度集中。"
+              "雖然我花時間實地探查，但仍有幾個風向轉折點評估不足。",
+              "我標出了大部分降落點，但忽略了某些高風險地區的變化。",
+              "部分備用著陸點的實際狀況與預想不符，差點誤判降落區域。"
             ],
             2: [
-              "一場突如其來的冷鋒幾乎打亂了整個訓練計畫，我只能臨機應變。",
-              "在大雪壟罩的山谷中，我幾度迷失方向，所幸成功穩住姿態。",
-              "愛格爾峰今天展現了它最險惡的一面，訓練過程驚險萬分。"
+              "我實地探查時遺漏了一處重要峽谷，導致飛行中一度迷失方向。",
+              "地形資料筆誤讓我誤認安全區，幸好臨場反應夠快。",
+              "地面探查不足讓我對當地亂流狀況估計錯誤，飛行險象環生。"
             ],
             10: [
-              "我在愛格爾峰的飛行中遭遇暴風雪，視線全失，最後被迫終止整個訓練。"
+              "我錯過了地形中一處容易產生亂流的轉角，飛行中突然失去控制，只能緊急開傘中止訓練。"
             ]
           },
-          
+
           B: {
             0: [
-              "我選擇了摩押沙漠，在炙熱懸崖間進行懸崖起跳與貼地飛行訓練。",
-              "儘管這裡高度不如阿爾卑斯山，但峽谷地形與熱空氣帶來獨特挑戰。",
-              "高溫使升力難以掌握，每一次起跳都仰賴極高的判斷力與反應速度。"
+              "我仔細比對天氣預報、風向圖與地形圖，模擬了多條飛行路線。",
+              "結合數據與預測工具，我規劃出一條避開強風與亂流的安全航線。",
+              "透過模擬工具，我能預判可能出現的風場變化與障礙物分布。"
             ],
             1: [
-              "今天的沙漠氣流不穩，我必須反覆調整飛行姿態維持平衡。",
-              "陽光造成地表過熱，強烈對流讓飛行軌跡變得難以預測。",
-              "飛行中突遇氣旋，我被迫提早脫離預定路線。"
+              "雖然資料齊全，但預報誤差導致我錯估了某段風速變化。",
+              "模擬軌跡與實際狀況略有出入，所幸我及時調整。",
+              "工具提供了方向，但某些地形干擾仍讓我措手不及。"
             ],
             2: [
-              "突如其來的沙塵暴遮蔽了整片視野，我只能靠記憶與儀器定位。",
-              "在狂風與對流交錯的峽谷間飛行，每一次轉彎都驚心動魄。",
-              "摩押今天成了飛行者的考驗場，我幾乎無法控制裝備。"
+              "我對風速圖的解讀失準，進入亂流區幾乎失控。",
+              "模擬結果未涵蓋突發天氣變化，讓我措手不及。",
+              "資料雖完整，但判讀錯誤讓我錯估了飛行風場。"
             ],
             10: [
-              "我在摩押沙漠遭遇劇烈沙塵暴，被迫中止飛行並緊急脫離訓練場域。"
+              "我對數據依賴過重，卻忽略了現地風變與地形特性，導致訓練陷入危機。"
             ]
           },
-          
+
           C: {
             0: [
-              "我來到澳洲的希爾灣，從高空俯瞰筆直海岸與壯麗海景，令人震撼。",
-              "這裡的氣流穩定，是理想的高空滑翔與風阻控制訓練場。",
-              "寬廣的沙灘成為完美著陸場，也讓我更安心地練習高速長距離飛行。"
+              "我根據過往經驗制定多套應變策略，確保每個突發狀況都能應對。",
+              "這次的計畫包含了三種備用飛行方案，讓我在空中更從容不迫。",
+              "我用腦中模擬飛行多次，每一個轉折點都預先安排了應變選項。"
             ],
             1: [
-              "飛行途中海風忽強忽弱，我必須快速反應姿態調整。",
-              "幾次意外的風切讓我偏離原本的軌道。",
-              "高空中風向變化明顯，我必須重新評估降落點。"
+              "我有應變計畫，但其中一項路線過於理想化，實施時略顯困難。",
+              "飛行中出現一個我沒預料到的轉向點，臨時調整略顯吃力。",
+              "部分策略缺乏細節，幸好當下冷靜處理。"
             ],
             2: [
-              "希爾灣上空突起暴風，我一度無法穩定滑翔。",
-              "氣流亂竄導致我進入不穩定區域，幾乎無法回復姿勢。",
-              "原本平靜的海岸線今天風雲變色，我驚險完成飛行。"
+              "我忽略了某些關鍵風場，原有策略無法完全應對，飛行一度失控。",
+              "我的模擬中遺漏了高空突風，導致應變策略失效。",
+              "突發亂流完全不在我的預測內，只能靠直覺救場。"
             ],
             10: [
-              "在希爾灣訓練時，突如其來的暴風捲走了我預定的飛行控制，訓練被迫中斷。"
+              "我過度仰賴經驗，卻忽略現場真實狀況，讓訓練陷入混亂，無法完成。"
             ]
           }
         };
-        const locationKey = state.answers.location;
-        const locationRisk = state.riskRecord[0]; // 地點是第一題
-        const sentenceSet = locationSentences[locationKey][locationRisk];
-        lines.push(randomFrom(sentenceSet));
 
-
-
+        const planKey = state.answers.flightplan;
+        const planRisk = state.riskRecord[0]; // 第二題風險值
+        lines.push(randomFrom(flightplanSentences[planKey][planRisk]));
+				// 第三題：天氣
         if (state.answers.weather === "D") {
           const fatalEndings = {
             A: "不幸的是，我在能見度為零的情況下起飛，最終迷失在茫茫的大雪與風暴之中……這次任務，以沉默告終。",
@@ -632,7 +632,7 @@
             ]
           };
           lines.push(randomFrom(weatherLabel[state.answers.weather]));
-
+					// 第四題：訓練目標
           if (state.answers.training === "A")
             lines.push(
               randomFrom([
@@ -657,7 +657,7 @@
                 "透過調整肢體張力與俯仰角，我更熟悉如何在高速中保持穩定。"
               ])
             );
-
+					// 第五題：裝備
           if (state.answers.gear === "A")
             lines.push(
               randomFrom([
@@ -678,19 +678,19 @@
           if (!state.hasFatalRisk) {
             let endingSet = [];
 
-            if (state.risk <= 3) {
+            if (state.risk <= 2) {
               endingSet = [
                 "訓練雖然艱難，但我從中學到了寶貴的飛行知識與經驗。這一切都將成為我通往高空夢想的基石。",
                 "這段飛行旅程教會我尊重風的力量，也讓我更理解自己在空中的每一個選擇。",
                 "每一次飛行都是與自然對話的機會，而今天的訓練，讓我更加堅定了追夢的決心。"
               ];
-            } else if (state.risk <= 6) {
+            } else if (state.risk <= 4) {
               endingSet = [
                 "儘管過程中出現了些小狀況，但我成功完成了訓練，也獲得了珍貴的經驗。",
                 "幾次驚險與挑戰讓我更成熟，也更加敬畏這片天空。",
                 "訓練過程比預期更曲折，但我挺了過來，也更懂得風險管理的重要性。"
               ];
-            } else if (state.risk <= 9) {
+            } else if (state.risk <= 7) {
               endingSet = [
                 "這次飛行充滿困難與險象，但我撐過來了。",
                 "我一度失去控制，但靠著訓練與經驗，最終仍平安著陸。",
@@ -704,25 +704,29 @@
             lines.push(randomFrom(endingSet));
           }
         }
+
         // 打字機效果
         let index = 0
-        function typeLine() {
-          if (index < lines.length) {
-            outputEl.innerText += lines[index] + "\n"
-            index++
-            setTimeout(typeLine, 1000)
-          };
-          if (state.hasFatalRisk) {
-            // 中斷日誌輸出，提早結束
-            //outputEl.innerText += "\n在這次訓練中，一場重大失誤終結了我的飛行計畫……";
+        function typeLine() {          
+          // 中斷日誌輸出，提早結束
+          if (state.hasFatalRisk) {           
+            let fatalIndex = state.riskRecord.findIndex(v => v === 10);
+            let maxIndex = fatalIndex + 2; // +2 是因為：0 為 intro，1 為地點
+            if (index <= maxIndex) {
+              outputEl.innerText += lines[index] + "\n"
+              index++
+              setTimeout(typeLine, 1000)
+            };
             return;
-          };
-          
-        }
-        
-        typeLine();
-        
-        
+          } else {
+            if (index < lines.length) {
+              outputEl.innerText += lines[index] + "\n"
+              index++
+              setTimeout(typeLine, 1000)
+            }
+          }          
+        }        
+        typeLine();       
       }
       
       function randomFrom(array) {
@@ -743,32 +747,6 @@
           callback();
         }, 1500);
       }
-
-      /*async function downloadJournal() {
-        const { jsPDF } = window.jspdf;
-
-        const journalElement = document.getElementById("output");
-
-        // 將文字畫面轉成圖片
-        const canvas = await html2canvas(journalElement, {
-          scale: 2
-        });
-        const imgData = canvas.toDataURL("image/png");
-
-        const pdf = new jsPDF({
-          orientation: "portrait",
-          unit: "mm",
-          format: "a4"
-        });
-
-        // 計算圖片大小（寬度 180mm，等比例縮放）
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = 180;
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-        pdf.addImage(imgData, "PNG", 15, 20, pdfWidth, pdfHeight);
-        pdf.save("翼裝飛行訓練日誌.pdf");
-      }*/
 
     </script>
   </body>
