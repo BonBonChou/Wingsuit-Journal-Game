@@ -64,8 +64,14 @@
         border-radius: 10px;
       }
       .hidden {
-        display: none;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        position: absolute;
+        left: -9999px; /* 把它挪出畫面外 */
       }
+
+
       .center {
         text-align: center;
       }
@@ -262,7 +268,7 @@
       <div id="output-screen" class="hidden">
         <h2>🌟 我的訓練日誌</h2>
         <div id="output"></div>
-        <button onclick="location.reload()">重新開始</button>
+        <button onclick="restartGame()">重新開始</button>
         <!-- <button onclick="downloadJournal()">下載日誌</button>-->
       </div>
     </div>
@@ -906,11 +912,18 @@
       function randomFrom(array) {
         return array[Math.floor(Math.random() * array.length)];
       }
-      
+      window.addEventListener("load", () => {
+        const dice = document.getElementById("dice3d");
+        dice.style.transition = "transform 0.1s";
+        dice.style.transform = "rotateX(90deg) rotateY(90deg)";
+      });
       function showRiskNotice(riskValue, callback) {
         const container = document.getElementById("dice3d-container");
         const dice = document.getElementById("dice3d");
         container.classList.remove("hidden");
+        container.style.opacity = "1";
+        container.style.visibility = "visible";
+
 
         // 禁用所有選項按鈕
         const optionButtons = document.querySelectorAll(".choice-btn, .option-button");
@@ -942,6 +955,7 @@
         // 顯示風險值
         setTimeout(() => {
           container.classList.add("hidden");
+          container.style.left = ""; // 清空可能干擾位置的 left
 
           const box = document.getElementById("risk-notice");
           box.textContent = `⚠️風險值 +${riskValue}`;
@@ -959,6 +973,36 @@
           }, 1500);
         }, 2500);
       }
+      
+      function restartGame() {
+        // 隱藏所有頁面
+        document.getElementById("question-screen").classList.add("hidden");
+        document.getElementById("knowledge-screen").classList.add("hidden");
+        document.getElementById("final-message-screen").classList.add("hidden");
+        document.getElementById("output-screen").classList.add("hidden");
+
+        // 顯示首頁
+        document.getElementById("start-screen").classList.remove("hidden");
+
+        // 重置狀態
+        state.step = 0;
+        state.answers = {};
+        state.fatal = false;
+        state.journalParts = [];
+        state.risk = 0;
+        state.riskRecord = [];
+        state.hasFatalRisk = false;
+
+        // 清空骰子
+        const dice = document.getElementById("dice3d");
+        dice.style.transform = "rotateX(0deg) rotateY(0deg)";
+
+        // 清空日誌輸出
+        const output = document.getElementById("output");
+        if (output) output.innerText = "";
+      }
+
+      
     </script>
   </body>
 </html>
