@@ -480,6 +480,10 @@
       
       function getRiskValue(qKey, selectedKey) {
         if (qKey === "weather" && selectedKey === "D") return 10;
+        /*if (qKey === "flightplan" ) return 10;
+        if (qKey === "weather" ) return 10;      
+        if (qKey === "training" ) return 10;*/
+        //if (qKey === "gear" ) return 10;
 
         const roll = Math.random();
         if (roll < 0.05) return 10;
@@ -574,11 +578,25 @@
         document.getElementById("output-screen").classList.remove("hidden");
         
         function getRiskLabel(risk) {
-        	if (state.answers.weather === "D") return "致命";
-          if (risk <= 2) return "安全";
-          if (risk <= 4) return "低風險";
-          if (risk <= 7) return "高風險";
-          return "危險";
+        	const fatalIndex = state.riskRecord.findIndex(r => r === 10);
+          const weatherIndex = 1; // 天氣是riskRecord[1]
+
+          // 如果選了能見度為零，且這一題沒有被前面的 +10 擋住，才致命
+          if (
+            state.answers.weather === "D" &&
+            (fatalIndex === -1 || fatalIndex >= weatherIndex)
+          ) {
+            return "致命";
+          } else if (risk <= 2) {
+            return "安全";
+          } else if (risk <= 4) {
+            return "低風險";
+          } else if (risk <= 7) {
+            return "高風險";
+          } else {
+            return "危險";
+          }
+          
         }
         const risktotalEl = document.getElementById("risktotal");
         risktotalEl.innerText = `總風險值：${state.risk} (${getRiskLabel(state.risk)})`;
@@ -636,7 +654,7 @@
               "我誤以為某處開闊地能安全降落，實地測風才發現亂流極強，立刻更換降落計畫避開該區。"
             ],
             10: [
-              "我錯估地形與風場位置，導致飛行時誤入亂流密集區，姿勢失控之下只得提前開傘結束訓練。這次任務，以失敗告終……"
+              "我誤判了一處地形為可用降落點，實際飛行時才發現風勢不穩、障礙重重，最後只能緊急開傘，中止任務。這次訓練，以失敗告終……"
             ]
           },
 
@@ -783,7 +801,7 @@
               "升力角度掌握錯誤，導致飛行途中大幅搖晃，只能不停修正角度以維持路線。",
               "我誤將亂流區誤認為升力路線，導致一路下滑，靠不斷調整角度才勉強延長滑翔距離。"
             ],
-            10: "我誤判升力角度過度前傾，始終無法展開滑翔姿勢，不得已只能緊急開傘中止訓練。這次任務，以失敗告終……"
+            10: ["我誤判升力角度過度前傾，始終無法展開滑翔姿勢，不得已只能緊急開傘中止訓練。這次任務，以失敗告終……"]
           },
 
           B: { // 編隊飛行
@@ -802,7 +820,7 @@
               "在編隊飛行中進入氣流不穩定區域，無法精準維持位置，被湍流捲動，差點撞上隊友。",
               "側風干擾導致我過度偏離位置，造成整體編隊短暫混亂，只能努力修正。"
             ],
-            10: "我誤闖他人湍流範圍，飛鼠裝劇烈晃動幾近翻覆，我連忙拉開降落傘，提前結束這段飛行。這次任務，以失敗告終……"
+            10: ["我誤闖他人湍流範圍，飛鼠裝劇烈晃動幾近翻覆，我連忙拉開降落傘，提前結束這段飛行。這次任務，以失敗告終……"]
           },
 
           C: { // 高空加速與減速
@@ -821,13 +839,14 @@
               "在測試極限減速時身體重心前傾過度，導致滑翔中失衡，只能勉強延長下滑距離穩住方向。",
               "連續加速後反應不及，飛鼠裝產生不對稱氣流，導致震盪，飛行結束前才拉回控制權。"
             ],
-            10: "過度加速造成姿態崩潰，我完全無法穩定機體，只能果斷開傘終止這次訓練。這次任務，以失敗告終……"
+            10: ["過度加速造成姿態崩潰，我完全無法穩定機體，只能果斷開傘終止這次訓練。這次任務，以失敗告終……"]
           }
         };
 
         const trainingKey = state.answers.training;
         const trainingRisk = state.riskRecord[2];
         lines.push(randomFrom(trainingSentences[trainingKey][trainingRisk]));
+        
 
         // 第五題：裝備
         const gearSentences = {
@@ -847,7 +866,7 @@
               "尼龍翼面在亂流下失去剛性，一度折疊變形，我只能強行穩住身體姿態延長飛行。",
               "翼面在不穩氣流中鼓脹不均，導致方向漂移，我只能不斷調整姿勢修正飛行路線。"
             ],
-            10: "尼龍飛鼠裝在高壓亂流下劇烈震動，翼面局部失效，我無法穩定滑翔，只能緊急開傘中止訓練。這次任務，以失敗告終……"
+            10: ["尼龍飛鼠裝在高壓亂流下劇烈震動，翼面局部失效，我無法穩定滑翔，只能緊急開傘中止訓練。這次任務，以失敗告終……"]
           },
 
           B: { // 碳纖維氣室裝
@@ -866,12 +885,12 @@
               "在側風與湍流中裝備開始晃動偏移，我靠縮肢並連續修正張力才穩住滑翔軌跡。",
               "高空轉彎時碳纖維氣室裝剛性不足以支撐加速度，我滑出預定航線，險些撞上障礙物。"
             ],
-            10: "氣室在飛行初期未能成功充氣，導致裝備無法形成完整翼面，只能緊急開傘結束飛行。這次任務，以失敗告終……"
+            10: ["氣室在飛行初期未能成功充氣，導致裝備無法形成完整翼面，只能緊急開傘結束飛行。這次任務，以失敗告終……"]
           }
         };
 
         const gearKey = state.answers.gear;
-        const gearRisk = state.riskRecord[3]; 
+        const gearRisk = state.riskRecord[3];
         lines.push(randomFrom(gearSentences[gearKey][gearRisk]));
         
         if (!state.hasFatalRisk) {
@@ -899,32 +918,27 @@
             // fallback（應該不會進入這邊）
             endingSet = ["這趟飛行於我而言失敗了，但也讓我看清了自己最需要學會的，是謙遜與準備。"];
           }
-
-          lines.push(randomFrom(endingSet));
+					lines.push(randomFrom(endingSet));
         }
 
 
         // 打字機效果
         let index = 0
-        function typeLine() {          
-          // 中斷日誌輸出，提早結束
-          if (state.hasFatalRisk) {           
-            let fatalIndex = state.riskRecord.findIndex(v => v === 10);
-            let maxIndex = fatalIndex + 2; // +2 是因為：0 為 intro，1 為地點
-            if (index <= maxIndex) {
-              outputEl.innerText += lines[index] + "\n"
-              index++
-              setTimeout(typeLine, 1000)
-            };
-            return;
-          } else {
-            if (index < lines.length) {
-              outputEl.innerText += lines[index] + "\n"
-              index++
-              setTimeout(typeLine, 1000)
-            }
-          }          
-        }        
+        function typeLine() {
+        	const fatalIndex = state.riskRecord.findIndex(v => v === 10); // 先判斷是否有致命風險
+          let maxLine = lines.length; // 預設為全部輸出          
+          
+					// 中斷日誌輸出，提早結束
+          if (state.hasFatalRisk) {    
+            maxLine = fatalIndex + 3;
+          }
+        
+          if (index < maxLine) {         	
+            outputEl.innerText += lines[index] + "\n";
+            index++;
+            setTimeout(typeLine, 1000);
+          }         
+        }
         typeLine();       
       }
       
