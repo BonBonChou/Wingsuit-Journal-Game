@@ -202,6 +202,10 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+      
+      .game-intro {
+        text-align: justify;
+      }
 
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC&display=swap" rel="stylesheet">
@@ -215,17 +219,21 @@
         <div class="intro">
           <h5>翼裝飛行是一項結合速度、技巧與風險的極限運動。立體劇場電影《翼裝飛行》的內容化為這款小遊戲，將你的旅程寫入一篇獨一無二的訓練日誌——</h5>
           <h5>見證你的堅持與飛行夢想吧！</h5>
-          <h3>🔍 遊戲說明</h3>
-          <p>
-            🌌 <strong>背景故事</strong><br/>你將踏上和主角羅貝塔相似的飛行旅程，透過一連串的選擇體驗飛行訓練、挑戰極限。在這段訓練旅途中，你將學會判讀天氣、調整飛行姿態、選擇合適裝備等等，並理解背後的物理知識。
-          </p>
-          <p>
-            🧠 <strong>玩法簡介</strong><br />遊戲總共 5 種情境。每種情境只能選擇一個答案。
-          </p>
-          <p>
-            🏆 <strong>目標與結局</strong
-            ><br />遊戲結束後，將根據你的選擇獲得專屬的翼裝飛行訓練日誌。
-          </p>
+          <div class="game-intro">
+            <h3>🔍 遊戲說明</h3> 
+            <p>
+              🌌 <strong>背景故事</strong><br/>
+              你將踏上和主角羅貝塔相似的飛行旅程，透過一連串的選擇體驗飛行訓練、挑戰極限。在這段訓練旅途中，你將學會判讀天氣、調整飛行姿態、選擇合適裝備等等，並理解背後的物理知識。
+            </p>
+            <p>
+              🧠 <strong>玩法簡介</strong><br/>
+              遊戲總共 5 種情境。每種情境只能選擇一個答案。除了地點以外，每種情境的不同選擇都會增加不同的風險，風險值過高就會導致該次飛行失敗喔！
+            </p>
+            <p>
+              🏆 <strong>目標與結局</strong><br/>
+              遊戲結束後，將根據你的選擇獲得專屬的翼裝飛行訓練日誌。
+            </p>
+          </div>
         </div>
         <button onclick="startGame()">開始創建我的日誌</button>
       </div>
@@ -259,7 +267,7 @@
       <!-- 結尾頁 -->
       <div id="final-message-screen" class="hidden">
         <h6>冒險家找到了許多前人尚未嘗試的路線，<br>將我們帶到從未有人到過的地方，<br>完成從未有人做過的事情。</h6>
-        <h2 id="final-highlight">這就是夢想——<br>尋找終極路線，並在有生之年講述這個故事。</h2>
+        <h2 id="final-highlight">這就是夢想——<br>尋找終極路線，並在有生之年講述這個故事。</h2>        
         <div id="FMinfo-link" class="hidden" style="margin-top: 1em;"></div>
         <button onclick="showOutput()">查看日誌</button>
       </div>
@@ -267,6 +275,7 @@
       <!-- 輸出頁面 -->
       <div id="output-screen" class="hidden">
         <h2>🌟 我的訓練日誌</h2>
+        <div id="risktotal"></div>
         <div id="output"></div>
         <button onclick="restartGame()">重新開始</button>
         <!-- <button onclick="downloadJournal()">下載日誌</button>-->
@@ -563,6 +572,16 @@
       function showOutput() {
       	document.getElementById("final-message-screen").classList.add("hidden");
         document.getElementById("output-screen").classList.remove("hidden");
+        
+        function getRiskLabel(risk) {
+        	if (state.answers.weather === "D") return "致命";
+          if (risk <= 2) return "安全";
+          if (risk <= 4) return "低風險";
+          if (risk <= 7) return "高風險";
+          return "危險";
+        }
+        const risktotalEl = document.getElementById("risktotal");
+        risktotalEl.innerText = `總風險值：${state.risk} (${getRiskLabel(state.risk)})`;
 
         const outputEl = document.getElementById("output");
         outputEl.innerText = "";
